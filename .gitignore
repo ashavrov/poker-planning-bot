@@ -20,7 +20,6 @@ tmp/**/*
 local.properties
 .classpath
 .recommenders
-.settings/
 .loadpath
 .metadata
 # External tool builders
@@ -28,3 +27,6 @@ local.properties
 
 # Locally stored "Eclipse launch configurations"
 *.launch
+.settings/
+
+*.prefs
