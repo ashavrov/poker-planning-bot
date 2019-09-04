@@ -9,6 +9,7 @@ import commands.CommandHandler;
 
 public class Bot extends TelegramLongPollingBot {
 	CommandHandler commandHandler = new CommandHandler();
+
 	public void onUpdateReceived(Update update) {
 		if (update.hasMessage() && update.getMessage().hasText()) {
 			SendMessage message = new SendMessage();

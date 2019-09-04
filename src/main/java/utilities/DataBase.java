@@ -11,24 +11,28 @@ import java.sql.Connection;
 
 public class DataBase {
 	private Connection connection = null;
-	public int status = 0;
 
-	public void init() {
+	public boolean init() {
 		try {
 			Class.forName("org.postgresql.Driver");
+			if(System.getenv("JDBC_DATABASE_URL").isEmpty()) {
+				return false;
+			}
 			connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
-			status = 1;
-		} catch (Exception e) {
+			return true;
+		} catch (Exception e ) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 
-	public void close() {
+	public boolean close() {
 		try {
 			connection.close();
-			status = 0;
+			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 

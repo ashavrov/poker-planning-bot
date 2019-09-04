@@ -1,4 +1,4 @@
-package test;
+
 
 import org.junit.After;
 import org.junit.Assert;
@@ -12,9 +12,8 @@ public class TestDataBase {
 
 	@Before
 	public void testConnect() {
-		dataBase.init();
+		Assert.assertTrue(dataBase.init());
 		Assert.assertNotNull(dataBase);
-		Assert.assertEquals(1, dataBase.status);
 	}
 
 	@Test
@@ -32,7 +31,6 @@ public class TestDataBase {
 
 	@After
 	public void testCloseConnect() {
-		dataBase.close();
-		Assert.assertEquals(0, dataBase.status);
+		Assert.assertTrue(dataBase.close());
 	}
 }
