@@ -7,7 +7,7 @@ import org.junit.Test;
 import commands.CommandHandler;
 
 public class TestCommand {
-	CommandHandler handler = new CommandHandler();
+	private CommandHandler handler = new CommandHandler();
 
 	@Test
 	public void testCommandStart() {
