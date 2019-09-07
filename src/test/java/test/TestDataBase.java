@@ -1,3 +1,4 @@
+package test;
 
 
 import org.junit.After;
@@ -8,7 +9,7 @@ import org.junit.Test;
 import utilities.DataBase;
 
 public class TestDataBase {
-	DataBase dataBase = new DataBase();
+	private DataBase dataBase = new DataBase();
 
 	@Before
 	public void testConnect() {
