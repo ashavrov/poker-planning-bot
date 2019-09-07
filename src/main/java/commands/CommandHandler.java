@@ -12,8 +12,8 @@ import utilities.DataBase;
  * Command handler class
  */
 public class CommandHandler {
-	DataBase dataBase = new DataBase();
-	HashMap<Integer, User> users = new HashMap<Integer, User>();
+	private DataBase dataBase = new DataBase();
+	private HashMap<Integer, User> users = new HashMap<Integer, User>();
 
 	public CommandHandler() {
 		dataBase.init();
