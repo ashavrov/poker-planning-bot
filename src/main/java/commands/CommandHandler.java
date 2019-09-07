@@ -30,10 +30,10 @@ public class CommandHandler {
 
 	private String process(String command, Integer userId, Long chatId, String firstName) {
 		String returnMessage = "Привет, " + firstName + "!";
-		if (command.equals("/start")) {
+		if ("/start".equals(command)) {
 			if (!users.containsKey(userId)) {
 				User user = dataBase.getUser(userId, chatId, firstName);
-				if (!user.equals(null)) {
+				if (user != null) {
 					users.put(userId, user);
 				} else {
 					returnMessage = "Ошибка при инициализации пользователя.";
