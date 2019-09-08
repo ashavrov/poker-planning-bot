@@ -11,7 +11,7 @@ public class TestCommand {
 
 	@Test
 	public void testCommandStart() {
-		String text = handler.execute("/start", 123, (long) 123, "Тест");
+		String text = handler.execute("/start", 123456, (long) 123456, "Тест");
 		Assert.assertEquals("Привет, Тест!", text);
 	}
 
