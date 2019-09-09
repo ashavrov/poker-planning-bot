@@ -4,11 +4,13 @@ public class User {
 	private String name = null;
 	private String chatId = null;
 	private String userId = null;
+
 	public User(String userId, String chatId, String name) {
 		this.userId = userId;
 		this.chatId = chatId;
 		this.name = name;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -18,6 +20,7 @@ public class User {
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -44,21 +47,27 @@ public class User {
 			return false;
 		return true;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public void setChatId(String chatId) {
 		this.chatId = chatId;
 	}
+
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+
 	public String getChatId() {
 		return chatId;
 	}
+
 	public String getUserId() {
 		return userId;
 	}

@@ -5,6 +5,5 @@ before_script:
   - echo "Starting build"
 script:
   - mvn clean package
-  - mvn clean test
 after_script:
   - echo "Script finished"

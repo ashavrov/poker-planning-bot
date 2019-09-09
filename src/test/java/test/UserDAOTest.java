@@ -6,7 +6,7 @@ import org.junit.Assert;
 import dao.UserDAO;
 import entities.User;
 
-public class TestUserDAO {
+public class UserDAOTest {
 
 	@Test
 	public void testUserDAO() {
