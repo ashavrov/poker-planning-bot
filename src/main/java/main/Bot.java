@@ -17,7 +17,7 @@ public class Bot extends TelegramLongPollingBot {
 			MessageCommand message = new MessageCommand(update.getMessage().getText(),
 					update.getMessage().getFrom().getId(), update.getMessage().getChatId(),
 					update.getMessage().getFrom().getFirstName());
-			commandHandler.execute(message);
+			sendMsg(update.getMessage().getChatId(), commandHandler.execute(message));
 		}
 	}
 
@@ -31,7 +31,7 @@ public class Bot extends TelegramLongPollingBot {
 		return System.getenv("botToken");
 	}
 
-	public void sendMsg(String chatId, String textMessage) {
+	public void sendMsg(Long chatId, String textMessage) {
 		SendMessage message = new SendMessage();
 		message.setChatId(chatId).setText(textMessage);
 		try {
