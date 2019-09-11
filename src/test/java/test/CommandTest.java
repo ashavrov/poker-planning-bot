@@ -20,6 +20,17 @@ public class CommandTest {
 		text = handler.execute(message);
 		Assert.assertEquals("Привет, Test!", text);
 	}
+	
+	@Test
+	public void testCommandСreateMeeting() {
+		MessageCommand message = new MessageCommand("/createMeeting TestFromUnitTest 2019-01-01_12:00:00.0", 1234, (long) 1234, "Test");
+		String text = handler.execute(message);
+		Assert.assertEquals("Встреча создана.", text);
+		message = null;
+		message = new MessageCommand("/createMeeting TestFromUnitTest 2019-01-01", 1234, (long) 1234, "Test");
+		text = handler.execute(message);
+		Assert.assertEquals("Ошибка при создании встречи.", text);
+	}
 
 	@Test
 	public void testCommandUnknown() {

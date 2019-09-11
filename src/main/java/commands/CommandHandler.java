@@ -16,7 +16,12 @@ public class CommandHandler {
 			CommandStart commandStart = new CommandStart();
 			returnMessage = commandStart.execute(message);
 			return returnMessage;
-		} else {
+		} else if("/createMeeting".equals(message.getCommand())) {
+			CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
+			returnMessage = commandCreateMeeting.execute(message);
+			return returnMessage;
+		}
+		else {
 			return "Неизвестная команда.";
 		}
 	}
