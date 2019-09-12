@@ -15,9 +15,9 @@ public class CommandTest {
 	@Test
 	public void testCommandStart() {
 		MessageCommandIn message = new MessageCommandIn("/start", 1234, (long) 1234, "Test");
-		String text = handler.execute(message);
+		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Привет, Test!", text);
-		text = handler.execute(message);
+		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Привет, Test!", text);
 	}
 
@@ -25,18 +25,18 @@ public class CommandTest {
 	public void testCommandCreateMeeting() {
 		MessageCommandIn message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01_12:00:00.0", 1234,
 				(long) 1234, "Test");
-		String text = handler.execute(message);
+		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Встреча создана.", text);
 		message = null;
 		message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01", 1234, (long) 1234, "Test");
-		text = handler.execute(message);
+		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Ошибка при создании встречи.", text);
 	}
 
 	@Test
 	public void testCommandUnknown() {
 		MessageCommandIn message = new MessageCommandIn("/unknown", 345, (long) 345, "Тест");
-		String text = handler.execute(message);
+		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Неизвестная команда.", text);
 	}
 

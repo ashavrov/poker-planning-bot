@@ -1,12 +1,14 @@
 package main;
 
+import java.util.ArrayList;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import commands.CommandHandler;
 import commands.MessageCommandIn;
+import commands.MessageCommandOut;
 
 public class Bot extends TelegramLongPollingBot {
 	private CommandHandler commandHandler = new CommandHandler();
@@ -17,7 +19,7 @@ public class Bot extends TelegramLongPollingBot {
 			MessageCommandIn message = new MessageCommandIn(update.getMessage().getText(),
 					update.getMessage().getFrom().getId(), update.getMessage().getChatId(),
 					update.getMessage().getFrom().getFirstName());
-			sendMsg(update.getMessage().getChatId(), commandHandler.execute(message));
+			sendMsg(commandHandler.execute(message));
 		}
 	}
 
@@ -31,11 +33,11 @@ public class Bot extends TelegramLongPollingBot {
 		return System.getenv("botToken");
 	}
 
-	public void sendMsg(Long chatId, String textMessage) {
-		SendMessage message = new SendMessage();
-		message.setChatId(chatId).setText(textMessage);
+	public void sendMsg(ArrayList<MessageCommandOut> messages) {
 		try {
-			execute(message);
+			for (MessageCommandOut message : messages) {
+				execute(message.getMessage());
+			}
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
