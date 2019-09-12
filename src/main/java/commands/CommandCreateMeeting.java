@@ -19,6 +19,7 @@ public class CommandCreateMeeting implements Command {
 			Meeting meeting = new Meeting(new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").parse(args[2]), args[1]);
 			meetingDAO.insert(meeting);
 			messageOut.setText("Встреча создана.");
+			messageOut.addButton("Добавить пользователя.", "/addUser");
 			listMessagesOut.add(messageOut);
 			return listMessagesOut;
 		} catch (ParseException e) {

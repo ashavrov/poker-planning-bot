@@ -21,16 +21,16 @@ public class MessageCommandOut {
 	public SendMessage getMessage() {
 		return message;
 	}
-	private InlineKeyboardMarkup createButton() {
+	public void addButton(String text, String callBack) {
 		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 	    List<List<InlineKeyboardButton>> rowsInline = new ArrayList<List<InlineKeyboardButton>>();
 	    List<InlineKeyboardButton> rowInline = new ArrayList<InlineKeyboardButton>();
-	    rowInline.add(new InlineKeyboardButton().setText("Update message text").setCallbackData("update_msg_text"));
+	    rowInline.add(new InlineKeyboardButton().setText(text).setCallbackData(callBack));
 	    // Set the keyboard to the markup
 	    rowsInline.add(rowInline);
 	    // Add it to the message
 	    markupInline.setKeyboard(rowsInline);
-	    return markupInline;
+	    message.setReplyMarkup(markupInline);
 	}
 	
 }
