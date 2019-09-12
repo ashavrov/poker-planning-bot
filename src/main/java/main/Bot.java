@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import commands.CommandHandler;
-import entities.MessageCommand;
+import commands.MessageCommandIn;
 
 public class Bot extends TelegramLongPollingBot {
 	private CommandHandler commandHandler = new CommandHandler();
@@ -14,7 +14,7 @@ public class Bot extends TelegramLongPollingBot {
 	@Override
 	public void onUpdateReceived(Update update) {
 		if (update.hasMessage() && update.getMessage().hasText()) {
-			MessageCommand message = new MessageCommand(update.getMessage().getText(),
+			MessageCommandIn message = new MessageCommandIn(update.getMessage().getText(),
 					update.getMessage().getFrom().getId(), update.getMessage().getChatId(),
 					update.getMessage().getFrom().getFirstName());
 			sendMsg(update.getMessage().getChatId(), commandHandler.execute(message));

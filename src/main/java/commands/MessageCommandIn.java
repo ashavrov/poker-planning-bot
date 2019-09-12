@@ -1,13 +1,13 @@
-package entities;
+package commands;
 
-public class MessageCommand {
+public class MessageCommandIn {
 	private String message = "";
 	private String command = "";
 	private Integer userId = 0;
 	private Long chatId = (long) 0;
 	private String firstName = "";
 
-	public MessageCommand(String message, Integer userId, Long chatId, String firstName) {
+	public MessageCommandIn(String message, Integer userId, Long chatId, String firstName) {
 		this.message = message;
 		this.userId = userId;
 		this.chatId = chatId;

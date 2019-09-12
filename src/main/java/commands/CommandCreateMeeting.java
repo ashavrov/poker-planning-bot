@@ -5,12 +5,11 @@ import java.text.SimpleDateFormat;
 
 import dao.MeetingDAO;
 import entities.Meeting;
-import entities.MessageCommand;
 
 public class CommandCreateMeeting implements Command {
 
 	@Override
-	public String execute(MessageCommand message) {
+	public String execute(MessageCommandIn message) {
 		String[] args = message.getMessage().split(" ");
 		MeetingDAO meetingDAO = new MeetingDAO();
 		try {

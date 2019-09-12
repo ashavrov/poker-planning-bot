@@ -5,8 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import commands.CommandHandler;
+import commands.MessageCommandIn;
 import dao.UserDAO;
-import entities.MessageCommand;
 import entities.User;
 
 public class CommandTest {
@@ -14,27 +14,28 @@ public class CommandTest {
 
 	@Test
 	public void testCommandStart() {
-		MessageCommand message = new MessageCommand("/start", 1234, (long) 1234, "Test");
+		MessageCommandIn message = new MessageCommandIn("/start", 1234, (long) 1234, "Test");
 		String text = handler.execute(message);
 		Assert.assertEquals("Привет, Test!", text);
 		text = handler.execute(message);
 		Assert.assertEquals("Привет, Test!", text);
 	}
-	
+
 	@Test
-	public void testCommandСreateMeeting() {
-		MessageCommand message = new MessageCommand("/createMeeting TestFromUnitTest 2019-01-01_12:00:00.0", 1234, (long) 1234, "Test");
+	public void testCommandCreateMeeting() {
+		MessageCommandIn message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01_12:00:00.0", 1234,
+				(long) 1234, "Test");
 		String text = handler.execute(message);
 		Assert.assertEquals("Встреча создана.", text);
 		message = null;
-		message = new MessageCommand("/createMeeting TestFromUnitTest 2019-01-01", 1234, (long) 1234, "Test");
+		message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01", 1234, (long) 1234, "Test");
 		text = handler.execute(message);
 		Assert.assertEquals("Ошибка при создании встречи.", text);
 	}
 
 	@Test
 	public void testCommandUnknown() {
-		MessageCommand message = new MessageCommand("/unknown", 345, (long) 345, "Тест");
+		MessageCommandIn message = new MessageCommandIn("/unknown", 345, (long) 345, "Тест");
 		String text = handler.execute(message);
 		Assert.assertEquals("Неизвестная команда.", text);
 	}
