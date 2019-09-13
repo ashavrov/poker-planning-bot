@@ -8,6 +8,3 @@ CREATE UNIQUE INDEX meetings_meetingid_idx ON bot.meetings USING btree (meetingi
 COMMENT ON COLUMN bot.meetings."name" IS 'Название встречи';
 COMMENT ON COLUMN bot.meetings."date" IS 'Дата встречи';
 COMMENT ON COLUMN bot.meetings.meetingid IS 'Идентификатор';
-
-ALTER TABLE bot.meetings OWNER TO tgdunstfdmbhbu;
-GRANT ALL ON TABLE bot.meetings TO tgdunstfdmbhbu;
