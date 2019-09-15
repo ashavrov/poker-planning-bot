@@ -1,15 +1,15 @@
 language: java
-addons: 
-    sonarcloud: organization: "ashavrov" 
-    token: secure: "4469aa8e24227d15863da2ddf6cc5f4568f5f21b"
 before_install:
   - chmod +x mvnw
 before_script:
   - echo "Starting build"
-addons: 
-    sonarcloud: organization: "ashavrov" 
-    token: secure: "4469aa8e24227d15863da2ddf6cc5f4568f5f21b"
+addons:
+  sonarcloud:
+    organization: "ashavrov"
+    token:
+      secure: "a7662fd46943bc4778574c29f8e6e14091af8b25"
 script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
   - mvn clean package
 after_script:
   - echo "Script finished"
