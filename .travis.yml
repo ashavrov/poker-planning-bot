@@ -3,6 +3,9 @@ before_install:
   - chmod +x mvnw
 before_script:
   - echo "Starting build"
+addons: 
+    sonarcloud: organization: "ashavrov" 
+    token: secure: "4469aa8e24227d15863da2ddf6cc5f4568f5f21b"
 script:
   - mvn clean package
 after_script:
