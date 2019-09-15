@@ -13,10 +13,10 @@ public class CommandStart implements Command {
 		UserDAO userDAO = new UserDAO();
 		User user = userDAO.getById(message.getUserId().toString());
 		if (user == null) {
-			user = new User(message.getUserId().toString(), message.getChatId().toString(), message.getFirstName());
+			user = new User(message.getUserId().toString(), message.getChatId().toString(), message.getUserName() + " ");
 			userDAO.insert(user);
 		}
-		messageOut.setText("Привет, " + message.getFirstName() + "!");
+		messageOut.setText("Привет, " + message.getUserName() + "!");
 		listMessagesOut.add(messageOut);
 		return listMessagesOut;
 	}
