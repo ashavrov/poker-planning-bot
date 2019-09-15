@@ -1,5 +1,9 @@
 package test;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.Assert;
@@ -10,11 +14,13 @@ import entities.Meeting;
 
 public class MeetingDAOTest {
 	@Test
-	public void testInsertMeeting() {
+	public void testInsertMeeting() throws ParseException {
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		MeetingDAO meetingDAO = new MeetingDAO();
 		Assert.assertNotNull(meetingDAO);
-		Meeting meeting = new Meeting(new Date(), "Test meeting");
+		Meeting meeting = new Meeting(formatter.parse(formatter.format(new Date())), "Test meeting");
 		meetingDAO.insert(meeting);
+		
 		meetingDAO = null;
 		meetingDAO = new MeetingDAO();
 		Meeting meetingFromDB = meetingDAO.getById(meeting.getMeetingId());
@@ -23,22 +29,29 @@ public class MeetingDAOTest {
 		meetingDAO.delete(meeting);
 		Assert.assertNull(meetingDAO.getById(meeting.getMeetingId()));
 	}
-	
+
 	@Test
-	public void testUpdateMeeting() {
+	public void testUpdateMeeting() throws ParseException {
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		
 		MeetingDAO meetingDAO = new MeetingDAO();
-		Assert.assertNotNull(meetingDAO);
-		Meeting meeting = new Meeting(new Date(), "Test meeting");
+		Meeting meeting = new Meeting(formatter.parse(formatter.format(new Date())), "Test meeting 1");
 		meetingDAO.insert(meeting);
 		meetingDAO = null;
+		
 		meetingDAO = new MeetingDAO();
 		Meeting meetingFromDB = meetingDAO.getById(meeting.getMeetingId());
 		Assert.assertNotNull(meetingFromDB);
 		Assert.assertTrue(meeting.equals(meetingFromDB));
-		Date newDate = new Date();
-		meetingFromDB.setDate(newDate);
-		meetingDAO.update(meetingFromDB);
+		Date newDate = formatter.parse(formatter.format(new Date()));
+		Calendar calendar = Calendar.getInstance(); 
+		calendar.setTime(newDate); 
+		calendar.add(Calendar.DATE, 1);
+		newDate = calendar.getTime();
+		meeting.setDate(newDate);
+		meetingDAO.update(meeting);
 		meetingDAO = null;
+		
 		meetingDAO = new MeetingDAO();
 		Assert.assertNotNull(meetingDAO.getAll().isEmpty());
 		meetingFromDB = meetingDAO.getById(meeting.getMeetingId());

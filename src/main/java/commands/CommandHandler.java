@@ -1,28 +1,25 @@
 package commands;
 
-import entities.MessageCommand;
+import java.util.ArrayList;
 
 /**
  * @author ashavrov Command handler class
  */
 public class CommandHandler {
-	public CommandHandler() {
+	private CommandStart commandStart = new CommandStart();
+	private CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
 
-	}
-
-	public String execute(MessageCommand message) {
-		String returnMessage = "";
+	public ArrayList<MessageCommandOut> execute(MessageCommandIn message) {
 		if ("/start".equals(message.getCommand())) {
-			CommandStart commandStart = new CommandStart();
-			returnMessage = commandStart.execute(message);
-			return returnMessage;
-		} else if("/createMeeting".equals(message.getCommand())) {
-			CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
-			returnMessage = commandCreateMeeting.execute(message);
-			return returnMessage;
-		}
-		else {
-			return "Неизвестная команда.";
+			return commandStart.execute(message);
+		} else if ("/createMeeting".equals(message.getCommand())) {
+			return commandCreateMeeting.execute(message);
+		} else {
+			ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<MessageCommandOut>();
+			MessageCommandOut messageOut = new MessageCommandOut(message);
+			messageOut.setText("Неизвестная команда.");
+			listMessagesOut.add(messageOut);
+			return listMessagesOut;
 		}
 	}
 }

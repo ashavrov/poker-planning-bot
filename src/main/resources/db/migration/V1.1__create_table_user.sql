@@ -4,9 +4,9 @@ CREATE TABLE bot.users (
 	"name" varchar NOT NULL -- Имя пользователя
 );
 
+CREATE UNIQUE INDEX users_userid_idx ON bot.users USING btree (userid);
+
 COMMENT ON COLUMN bot.users.userid IS 'Идентификатор пользователя';
 COMMENT ON COLUMN bot.users.chatid IS 'Идентификатор чата';
 COMMENT ON COLUMN bot.users."name" IS 'Имя пользователя';
 
-ALTER TABLE bot.users OWNER TO tgdunstfdmbhbu;
-GRANT ALL ON TABLE bot.users TO tgdunstfdmbhbu;

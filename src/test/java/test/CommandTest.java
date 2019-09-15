@@ -5,8 +5,10 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import commands.CommandHandler;
+import commands.MessageCommandIn;
+import dao.MeetingDAO;
 import dao.UserDAO;
-import entities.MessageCommand;
+import entities.Meeting;
 import entities.User;
 
 public class CommandTest {
@@ -14,28 +16,29 @@ public class CommandTest {
 
 	@Test
 	public void testCommandStart() {
-		MessageCommand message = new MessageCommand("/start", 1234, (long) 1234, "Test");
-		String text = handler.execute(message);
+		MessageCommandIn message = new MessageCommandIn("/start", 1234, (long) 1234, "Test");
+		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Привет, Test!", text);
-		text = handler.execute(message);
+		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Привет, Test!", text);
 	}
-	
+
 	@Test
-	public void testCommandСreateMeeting() {
-		MessageCommand message = new MessageCommand("/createMeeting TestFromUnitTest 2019-01-01_12:00:00.0", 1234, (long) 1234, "Test");
-		String text = handler.execute(message);
+	public void testCommandCreateMeeting() {
+		MessageCommandIn message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01 12:00", 1234,
+				(long) 1234, "Test");
+		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Встреча создана.", text);
 		message = null;
-		message = new MessageCommand("/createMeeting TestFromUnitTest 2019-01-01", 1234, (long) 1234, "Test");
-		text = handler.execute(message);
+		message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01", 1234, (long) 1234, "Test");
+		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Ошибка при создании встречи.", text);
 	}
 
 	@Test
 	public void testCommandUnknown() {
-		MessageCommand message = new MessageCommand("/unknown", 345, (long) 345, "Тест");
-		String text = handler.execute(message);
+		MessageCommandIn message = new MessageCommandIn("/unknown", 345, (long) 345, "Тест");
+		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Неизвестная команда.", text);
 	}
 
@@ -45,6 +48,13 @@ public class CommandTest {
 		User user = userDAO.getById("1234");
 		Assert.assertTrue(user.equals(userDAO.getById("1234")));
 		userDAO.delete(user);
+		Assert.assertNull(userDAO.getById("1234"));
+		
+		MeetingDAO meetingDAO = new MeetingDAO();
+		Meeting meeting = meetingDAO.getByName("TestFromUnitTest");
+		Assert.assertTrue(meeting.equals(meetingDAO.getByName("TestFromUnitTest")));
+		meetingDAO.delete(meeting);
+		Assert.assertNull(meetingDAO.getByName("TestFromUnitTest"));
 	}
 
 }
