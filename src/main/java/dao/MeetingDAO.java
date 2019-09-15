@@ -8,59 +8,52 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import entities.Meeting;
 
 public class MeetingDAO extends DAO<Meeting> {
-	private ArrayList<Meeting> meetings = new ArrayList<Meeting>();
+	private static Logger log = LogManager.getLogger(MeetingDAO.class);
+	private ArrayList<Meeting> meetings = new ArrayList<>();
 
-	private ResultSet selectSQL(String sqlText) {
-		ResultSet resultSet = null;
-		try {
-			Class.forName("org.postgresql.Driver");
-			Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
-			Statement statement = connection.createStatement();
-			resultSet = statement.executeQuery(sqlText);
-			connection.close();
-			return resultSet;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	public void executeSQL(String sqlText) throws SQLException {
+		try (Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"))) {
+			try (Statement statement = connection.createStatement()) {
+				statement.execute(sqlText);
+				try (ResultSet resultSet = statement.getResultSet()) {
+					if (resultSet != null) {
+						getMeetingSQL(resultSet);
+					}
+				}
+			}
 		}
-		return resultSet;
 	}
 
-	private void updateSQL(String sqlText) {
-		try {
-			Class.forName("org.postgresql.Driver");
-			Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(sqlText);
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	private void getMeetingSQL(ResultSet resultSet) throws SQLException {
+		while (resultSet.next()) {
+			meetings.add(new Meeting(resultSet.getObject("name").toString(), resultSet.getObject("date").toString(),
+					resultSet.getObject("meetingid").toString()));
 		}
 	}
 
 	public MeetingDAO() {
-		ResultSet resultSet = selectSQL("SELECT name, date, meetingid FROM bot.meetings;");
 		try {
-			while (resultSet.next()) {
-				meetings.add(new Meeting(resultSet.getObject("name").toString(), resultSet.getObject("date").toString(),
-						resultSet.getObject("meetingid").toString()));
-			}
+			executeSQL("SELECT name, date, meetingid FROM bot.meetings;");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			log.catching(e);
 		}
 	}
 
 	@Override
 	public void insert(Meeting obj) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		updateSQL("INSERT INTO bot.meetings (name, date, meetingId) " + "VALUES ('" + obj.getName() + "', TIMESTAMP '"
-				+ formatter.format(obj.getDate()) + "','" + obj.getMeetingId() + "')");
+		try {
+			executeSQL("INSERT INTO bot.meetings (name, date, meetingId) " + "VALUES ('" + obj.getName()
+					+ "', TIMESTAMP '" + formatter.format(obj.getDate()) + "','" + obj.getMeetingId() + "')");
+		} catch (SQLException e) {
+			log.catching(e);
+		}
 		meetings.add(obj);
 	}
 
@@ -86,8 +79,12 @@ public class MeetingDAO extends DAO<Meeting> {
 
 	@Override
 	public void update(Meeting obj) {
-		updateSQL("UPDATE bot.meetings " + "SET name='" + obj.getName() + "', date='" + obj.getDate() + "' "
-				+ "WHERE meetingId='" + obj.getMeetingId() + "'");
+		try {
+			executeSQL("UPDATE bot.meetings " + "SET name='" + obj.getName() + "', date='" + obj.getDate() + "' "
+					+ "WHERE meetingId='" + obj.getMeetingId() + "'");
+		} catch (SQLException e) {
+			log.catching(e);
+		}
 		for (Meeting meeting : meetings) {
 			if (meeting.getMeetingId().equals(obj.getMeetingId())) {
 				meeting.setDate(obj.getDate());
@@ -98,7 +95,11 @@ public class MeetingDAO extends DAO<Meeting> {
 
 	@Override
 	public void delete(Meeting obj) {
-		updateSQL("DELETE FROM bot.meetings WHERE meetingId='" + obj.getMeetingId() + "'");
+		try {
+			executeSQL("DELETE FROM bot.meetings WHERE meetingId='" + obj.getMeetingId() + "'");
+		} catch (SQLException e) {
+			log.catching(e);
+		}
 		meetings.remove(obj);
 	}
 

@@ -1,7 +1,9 @@
 package main;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -11,6 +13,7 @@ import commands.MessageCommandIn;
 import commands.MessageCommandOut;
 
 public class Bot extends TelegramLongPollingBot {
+	private static Logger log = LogManager.getLogger(Bot.class);
 	private CommandHandler commandHandler = new CommandHandler();
 
 	@Override
@@ -40,13 +43,13 @@ public class Bot extends TelegramLongPollingBot {
 		return System.getenv("botToken");
 	}
 
-	public void sendMsg(ArrayList<MessageCommandOut> messages) {
+	public void sendMsg(List<MessageCommandOut> list) {
 		try {
-			for (MessageCommandOut message : messages) {
+			for (MessageCommandOut message : list) {
 				execute(message.getMessage());
 			}
 		} catch (TelegramApiException e) {
-			e.printStackTrace();
+			log.catching(e);
 		}
 	}
 }

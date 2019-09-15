@@ -33,6 +33,9 @@ public class UserDAOTest {
 		user.setName("Test3");
 		userDAO.update(user);
 		Assert.assertTrue(user.equals(userDAO.getById("234")));
+		Assert.assertTrue(userDAO.getById("234").equals(userDAO.getByName("Test3")));
+		Assert.assertNull(userDAO.getById("0987"));
+		Assert.assertNull(userDAO.getByName("noUser"));
 		userDAO.delete(user);
 		Assert.assertNull(userDAO.getById("123"));
 	}

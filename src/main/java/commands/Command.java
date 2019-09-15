@@ -1,7 +1,7 @@
 package commands;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Command {
-	public ArrayList<MessageCommandOut> execute(MessageCommandIn message);
+	public List<MessageCommandOut> execute(MessageCommandIn message);
 }

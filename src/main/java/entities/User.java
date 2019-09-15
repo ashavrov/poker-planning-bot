@@ -1,23 +1,23 @@
 package entities;
 
 public class User {
-	private String name = null;
-	private String chatId = null;
-	private String userId = null;
+	private String name = "";
+	private String chatId = "";
+	private String userId = "";
 
 	public User(String userId, String chatId, String name) {
-		this.userId = userId;
-		this.chatId = chatId;
-		this.name = name;
+		this.userId = userId == null ? "" : userId;
+		this.chatId = chatId == null ? "" : chatId;
+		this.name = name == null ? "" : name;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((chatId == null) ? 0 : chatId.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + chatId.hashCode();
+		result = prime * result + name.hashCode();
+		result = prime * result + userId.hashCode();
 		return result;
 	}
 
@@ -30,22 +30,7 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (chatId == null) {
-			if (other.chatId != null)
-				return false;
-		} else if (!chatId.equals(other.chatId))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (userId == null) {
-			if (other.userId != null)
-				return false;
-		} else if (!userId.equals(other.userId))
-			return false;
-		return true;
+		return chatId.equals(other.chatId) && name.equals(other.name) && userId.equals(other.userId);
 	}
 
 	public String getName() {
@@ -58,10 +43,6 @@ public class User {
 
 	public void setChatId(String chatId) {
 		this.chatId = chatId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
 	}
 
 	public String getChatId() {
