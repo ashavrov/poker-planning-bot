@@ -5,13 +5,13 @@ public class MessageCommandIn {
 	private String command = "";
 	private Integer userId = 0;
 	private Long chatId = (long) 0;
-	private String firstName = "";
+	private String userName = "";
 
-	public MessageCommandIn(String message, Integer userId, Long chatId, String firstName) {
+	public MessageCommandIn(String message, Integer userId, Long chatId, String userName) {
 		this.message = message;
 		this.userId = userId;
 		this.chatId = chatId;
-		this.firstName = firstName;
+		this.userName = userName;
 		this.command = message.split(" ")[0];
 	}
 
@@ -39,12 +39,12 @@ public class MessageCommandIn {
 		this.chatId = chatId;
 	}
 
-	public String getFirstName() {
-		return firstName;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
 	public String getCommand() {

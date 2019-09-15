@@ -59,7 +59,7 @@ public class MeetingDAO extends DAO<Meeting> {
 	@Override
 	public void insert(Meeting obj) {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		updateSQL("INSERT INTO bot.meetings (name, date, meetingId) " + "VALUES ('" + obj.getName() + "', '"
+		updateSQL("INSERT INTO bot.meetings (name, date, meetingId) " + "VALUES ('" + obj.getName() + "', TIMESTAMP '"
 				+ formatter.format(obj.getDate()) + "','" + obj.getMeetingId() + "')");
 		meetings.add(obj);
 	}
