@@ -30,7 +30,7 @@ public class Meeting {
 
 	public Meeting(String name, String dateString, String meetingId) {
 		try {
-			this.date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss.SSS").parse(dateString);
+			this.date = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(dateString);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -73,8 +73,6 @@ public class Meeting {
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((meetingId == null) ? 0 : meetingId.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((primaryUser == null) ? 0 : primaryUser.hashCode());
-		result = prime * result + ((users == null) ? 0 : users.hashCode());
 		return result;
 	}
 
@@ -90,8 +88,9 @@ public class Meeting {
 		if (date == null) {
 			if (other.date != null)
 				return false;
-		} else if (date.toString().equals((other.date.toString())))
+		} else if (date.compareTo(other.date) != 0) {
 			return false;
+		}
 		if (meetingId == null) {
 			if (other.meetingId != null)
 				return false;
@@ -102,17 +101,6 @@ public class Meeting {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (primaryUser == null) {
-			if (other.primaryUser != null)
-				return false;
-		} else if (!primaryUser.equals(other.primaryUser))
-			return false;
-		if (users == null) {
-			if (other.users != null)
-				return false;
-		} else if (!users.equals(other.users))
-			return false;
 		return true;
 	}
-
 }

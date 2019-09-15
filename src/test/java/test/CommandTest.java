@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import commands.CommandHandler;
 import commands.MessageCommandIn;
+import dao.MeetingDAO;
 import dao.UserDAO;
+import entities.Meeting;
 import entities.User;
 
 public class CommandTest {
@@ -23,7 +25,7 @@ public class CommandTest {
 
 	@Test
 	public void testCommandCreateMeeting() {
-		MessageCommandIn message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01_12:00:00.0", 1234,
+		MessageCommandIn message = new MessageCommandIn("/createMeeting TestFromUnitTest 2019-01-01 12:00", 1234,
 				(long) 1234, "Test");
 		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Встреча создана.", text);
@@ -46,6 +48,13 @@ public class CommandTest {
 		User user = userDAO.getById("1234");
 		Assert.assertTrue(user.equals(userDAO.getById("1234")));
 		userDAO.delete(user);
+		Assert.assertNull(userDAO.getById("1234"));
+		
+		MeetingDAO meetingDAO = new MeetingDAO();
+		Meeting meeting = meetingDAO.getByName("TestFromUnitTest");
+		Assert.assertTrue(meeting.equals(meetingDAO.getByName("TestFromUnitTest")));
+		meetingDAO.delete(meeting);
+		Assert.assertNull(meetingDAO.getByName("TestFromUnitTest"));
 	}
 
 }
