@@ -1,6 +1,6 @@
 package dao;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DAO<T> {
 	  public abstract void insert(T obj);
@@ -8,5 +8,5 @@ public abstract class DAO<T> {
 	  public abstract T getByName(String name);
 	  public abstract void update(T obj);
 	  public abstract void delete(T obj);
-	  public abstract ArrayList<T> getAll();
+	  public abstract List<T> getAll();
 }
