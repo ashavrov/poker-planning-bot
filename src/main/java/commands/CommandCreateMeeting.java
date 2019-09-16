@@ -2,6 +2,7 @@ package commands;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import dao.MeetingDAO;
 import dao.UserDAO;
@@ -11,8 +12,8 @@ import entities.User;
 public class CommandCreateMeeting implements Command {
 
 	@Override
-	public ArrayList<MessageCommandOut> execute(MessageCommandIn message) {
-		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<MessageCommandOut>();
+	public List<MessageCommandOut> execute(MessageCommandIn message) {
+		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
 		MessageCommandOut messageOut = new MessageCommandOut(message);
 		String[] args = message.getMessage().split(" ");
 		MeetingDAO meetingDAO = new MeetingDAO();

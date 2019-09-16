@@ -56,8 +56,12 @@ public class MeetingDAOTest {
 		Assert.assertNotNull(meetingDAO.getAll().isEmpty());
 		meetingFromDB = meetingDAO.getById(meeting.getMeetingId());
 		Assert.assertTrue(newDate.toString().equals(meetingFromDB.getDate().toString()));
+		Assert.assertNull(meetingDAO.getById("0987"));
+		Assert.assertNull(meetingDAO.getByName("NoMeeting"));
 		meetingDAO.delete(meeting);
 		Assert.assertNull(meetingDAO.getById(meeting.getMeetingId()));
+		
+		
 	}
 
 }

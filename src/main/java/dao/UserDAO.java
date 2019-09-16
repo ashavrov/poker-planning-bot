@@ -7,58 +7,51 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import entities.User;
 
 public class UserDAO extends DAO<User> {
-	private ArrayList<User> users = new ArrayList<User>();
+	private static Logger log = LogManager.getLogger(UserDAO.class);
+	private ArrayList<User> users = new ArrayList<>();
 
-	private ResultSet selectSQL(String sqlText) {
-		ResultSet resultSet = null;
-		try {
-			Class.forName("org.postgresql.Driver");
-			Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
-			Statement statement = connection.createStatement();
-			resultSet = statement.executeQuery(sqlText);
-			connection.close();
-			return resultSet;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	public void executeSQL(String sqlText) throws SQLException {
+		try (Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"))) {
+			try (Statement statement = connection.createStatement()) {
+				statement.execute(sqlText);
+				try (ResultSet resultSet = statement.getResultSet()) {
+					if (resultSet != null) {
+						getUsersSQL(resultSet);
+					}
+				}
+			}
 		}
-		return resultSet;
 	}
 
-	private void updateSQL(String sqlText) {
-		try {
-			Class.forName("org.postgresql.Driver");
-			Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"));
-			Statement statement = connection.createStatement();
-			statement.executeUpdate(sqlText);
-			connection.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	private void getUsersSQL(ResultSet resultSet) throws SQLException {
+		while (resultSet.next()) {
+			users.add(new User(resultSet.getObject("userId").toString(), resultSet.getObject("chatId").toString(),
+					resultSet.getObject("name").toString()));
 		}
 	}
 
 	public UserDAO() {
-		try {
-			ResultSet resultSet = selectSQL("select userId, chatId, name from bot.users");
-			while (resultSet.next()) {
-				users.add(new User(resultSet.getObject("userId").toString(), resultSet.getObject("chatId").toString(),
-						resultSet.getObject("name").toString()));
+			try {
+				executeSQL("select userId, chatId, name from bot.users");
+			} catch (SQLException e) {
+				log.catching(e);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
 	public void insert(User obj) {
-		updateSQL("INSERT INTO bot.users (userId, chatId, name) VALUES('" + obj.getUserId() + "', '" + obj.getChatId()
-				+ "','" + obj.getName() + "')");
+		try {
+			executeSQL("INSERT INTO bot.users (userId, chatId, name) VALUES('" + obj.getUserId() + "', '"
+					+ obj.getChatId() + "','" + obj.getName() + "')");
+		} catch (SQLException e) {
+			log.catching(e);
+		}
 		users.add(obj);
 	}
 
@@ -84,8 +77,12 @@ public class UserDAO extends DAO<User> {
 
 	@Override
 	public void update(User obj) {
-		updateSQL("update bot.users set userId='" + obj.getUserId() + "', chatId='" + obj.getChatId() + "', name='"
-				+ obj.getName() + "' where userId='" + obj.getUserId() + "'");
+		try {
+			executeSQL("update bot.users set userId='" + obj.getUserId() + "', chatId='" + obj.getChatId() + "', name='"
+					+ obj.getName() + "' where userId='" + obj.getUserId() + "'");
+		} catch (SQLException e) {
+			log.catching(e);
+		}
 		for (User user : users) {
 			if (user.getUserId().equals(obj.getUserId())) {
 				user.setChatId(obj.getChatId());
@@ -96,7 +93,11 @@ public class UserDAO extends DAO<User> {
 
 	@Override
 	public void delete(User obj) {
-		updateSQL("delete from bot.users where userId='" + obj.getUserId() + "'");
+		try {
+			executeSQL("delete from bot.users where userId='" + obj.getUserId() + "'");
+		} catch (SQLException e) {
+			log.catching(e);
+		}
 		users.remove(obj);
 	}
 

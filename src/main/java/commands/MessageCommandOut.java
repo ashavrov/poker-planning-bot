@@ -24,12 +24,10 @@ public class MessageCommandOut {
 	}
 	public void addButton(String text, String callBack) {
 		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
-	    List<List<InlineKeyboardButton>> rowsInline = new ArrayList<List<InlineKeyboardButton>>();
-	    List<InlineKeyboardButton> rowInline = new ArrayList<InlineKeyboardButton>();
+	    List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+	    List<InlineKeyboardButton> rowInline = new ArrayList<>();
 	    rowInline.add(new InlineKeyboardButton().setText(text).setCallbackData(callBack));
-	    // Set the keyboard to the markup
 	    rowsInline.add(rowInline);
-	    // Add it to the message
 	    markupInline.setKeyboard(rowsInline);
 	    message.setReplyMarkup(markupInline);
 	}
