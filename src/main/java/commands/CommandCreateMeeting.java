@@ -4,13 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import dao.MeetingDAO;
 import dao.UserDAO;
 import entities.Meeting;
 import entities.User;
 
 public class CommandCreateMeeting implements Command {
-
+	private static Logger log = LogManager.getLogger(CommandCreateMeeting.class);
 	@Override
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
@@ -29,7 +32,7 @@ public class CommandCreateMeeting implements Command {
 			}
 			return listMessagesOut;
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.catching(e);
 			messageOut.setText("Ошибка при создании встречи.");
 			listMessagesOut.add(messageOut);
 			return listMessagesOut;
