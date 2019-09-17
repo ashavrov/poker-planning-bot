@@ -18,19 +18,28 @@ public class Bot extends TelegramLongPollingBot {
 
 	@Override
 	public void onUpdateReceived(Update update) {
+		List<MessageCommandOut> messageOut = null;
+
 		if (update.hasMessage() && update.getMessage().hasText()) {
-			MessageCommandIn message = new MessageCommandIn(update.getMessage().getText(),
-					update.getMessage().getFrom().getId(), update.getMessage().getChatId(),
-					update.getMessage().getFrom().getFirstName() + " " + update.getMessage().getFrom().getLastName());
-			sendMsg(commandHandler.execute(message));
+			Integer userId = update.getMessage().getFrom().getId();
+			String messageText = update.getMessage().getText();
+			Long chatId = update.getMessage().getChatId();
+			String userName = update.getMessage().getFrom().getFirstName() + " "
+					+ update.getMessage().getFrom().getLastName();
+			
+			messageOut = commandHandler.execute(new MessageCommandIn(messageText, userId, chatId, userName, null));
+			
 		} else if (update.hasCallbackQuery()) {
-			MessageCommandIn message = new MessageCommandIn(update.getCallbackQuery().getMessage().getText(),
-					update.getCallbackQuery().getMessage().getFrom().getId(),
-					update.getCallbackQuery().getMessage().getChatId(),
-					update.getCallbackQuery().getMessage().getFrom().getFirstName() + " "
-							+ update.getCallbackQuery().getMessage().getFrom().getLastName());
-			sendMsg(commandHandler.execute(message));
+			Integer userId = update.getCallbackQuery().getFrom().getId();
+			String messageText = update.getCallbackQuery().getData();
+			Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
+			Long chatId = update.getCallbackQuery().getMessage().getChatId();
+			String userName = update.getCallbackQuery().getMessage().getFrom().getFirstName() + " "
+					+ update.getCallbackQuery().getMessage().getFrom().getLastName();
+			
+			messageOut = commandHandler.execute(new MessageCommandIn(messageText, userId, chatId, userName, messageId));
 		}
+		sendMsg(messageOut);
 	}
 
 	@Override
@@ -43,9 +52,12 @@ public class Bot extends TelegramLongPollingBot {
 		return System.getenv("botToken");
 	}
 
-	public void sendMsg(List<MessageCommandOut> list) {
+	public void sendMsg(List<MessageCommandOut> listMessages) {
 		try {
-			for (MessageCommandOut message : list) {
+			for (MessageCommandOut message : listMessages) {
+				if (message.getMessageDelete() != null) {
+					execute(message.getMessageDelete());
+				}
 				execute(message.getMessage());
 			}
 		} catch (TelegramApiException e) {
