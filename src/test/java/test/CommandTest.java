@@ -26,14 +26,14 @@ public class CommandTest {
 
 	@Test
 	public void testCommandCreateMeeting() {
-		MessageCommandIn message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01-01\" \"12:00\"", 1234,
+		MessageCommandIn message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01-01\" \"12:00\"", 174913664,
 				(long) 1234, "Test", null);
 		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Встреча создана.", text);
-		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\" \"45:00\"", 1234, (long) 1234, "Test", null);
+		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\" \"45:00\"", 174913664, (long) 1234, "Test", null);
 		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Ошибка при создании встречи.", text);
-		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\"", 1234, (long) 1234, "Test", null);
+		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\"", 174913664, (long) 1234, "Test", null);
 		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Ошибка при создании встречи. Неверный формат команды.", text);
 	}

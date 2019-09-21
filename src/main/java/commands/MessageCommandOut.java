@@ -11,6 +11,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
+import entities.User;
+
 public class MessageCommandOut {
 	private SendMessage message = new SendMessage();
 	private DeleteMessage messageDelete = null;
@@ -18,7 +20,7 @@ public class MessageCommandOut {
 	private String userId = null;
 
 	public MessageCommandOut(MessageCommandIn messageIn, Integer deleteMessageId) {
-		setChatId(messageIn.getChatId());
+		setChatId(messageIn.getChatId().toString());
 		setButtons();
 		if ("/constructorCommand".equals(messageIn.getCommand())) {
 			questionAnswerHandler = new QuestionAnswerHandler(messageIn.getMessage().split(" ")[1]);
@@ -30,7 +32,13 @@ public class MessageCommandOut {
 		}
 	}
 
-	public void setChatId(Long chatId) {
+	public MessageCommandOut(User user) {
+		this.userId = user.getChatId();
+		setChatId(user.getChatId());
+		setButtons();
+	}
+
+	public void setChatId(String chatId) {
 		message.setChatId(chatId);
 	}
 

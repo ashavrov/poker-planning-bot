@@ -39,9 +39,9 @@ public class CommandCreateMeeting implements Command {
 						.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Встреча создана."));
 				for (User user : userDAO.getAll()) {
 					if (!user.getUserId().equals(message.getUserId().toString())) {
-						listMessagesOut
-								.add(new MessageCommandOut(message, null).setText("Добавить участника:").addButton(
-										user.getName(), "/addUser " + user.getName() + " " + meeting.getMeetingId()));
+						listMessagesOut.add(new MessageCommandOut(message, null).setText("Добавить участника:")
+								.addButton(user.getName(),
+										"/addUser \"" + user.getUserId() + "\" \"" + meeting.getMeetingId() + "\""));
 					}
 				}
 			} catch (Exception e) {

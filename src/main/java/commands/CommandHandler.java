@@ -17,6 +17,7 @@ public class CommandHandler {
 	private ConstrunctorCommand constructorCommand = new ConstrunctorCommand();
 	private CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
 	private CommandShowMenu commandShowMenu = new CommandShowMenu();
+	private CommandAddUser commandAddUser = new CommandAddUser();
 
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		List<MessageCommandOut> messagesOut = new ArrayList<>();
@@ -38,6 +39,8 @@ public class CommandHandler {
 			messagesOut = commandCreateMeeting.execute(message);
 		} else if ("/showMenu".equals(message.getCommand())) {
 			messagesOut = commandShowMenu.execute(message);
+		} else if ("/addUser".equals(message.getCommand())) {
+			messagesOut = commandAddUser.execute(message);
 		} else {
 			messagesOut
 					.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Неизвестная команда."));
