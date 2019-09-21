@@ -25,7 +25,7 @@ public class CommandCreateMeeting implements Command {
 
 		Pattern patternCommand = Pattern.compile("^(\\/.*?)(\\s)(\\\".*\\\")(\\s)(\".*\")(\\s)(\".*\")$");
 		Matcher macherCommand = patternCommand.matcher(message.getMessage());
-		
+
 		if (macherCommand.find()) {
 			try {
 				String meetingName = macherCommand.group(3).replace("\"", "");
@@ -34,11 +34,15 @@ public class CommandCreateMeeting implements Command {
 				Meeting meeting = new Meeting(
 						new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(stringDate + " " + stringTime), meetingName);
 				meetingDAO.insert(meeting);
+				meetingDAO.addUser(userDAO.getById(message.getUserId().toString()), meeting);
 				listMessagesOut
 						.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Встреча создана."));
 				for (User user : userDAO.getAll()) {
-					listMessagesOut.add(new MessageCommandOut(message, null).setText("Добавить участника:")
-							.addButton(user.getName(), "/addUser " + user.getName() + " " + meeting.getMeetingId()));
+					if (!user.getUserId().equals(message.getUserId().toString())) {
+						listMessagesOut
+								.add(new MessageCommandOut(message, null).setText("Добавить участника:").addButton(
+										user.getName(), "/addUser " + user.getName() + " " + meeting.getMeetingId()));
+					}
 				}
 			} catch (Exception e) {
 				log.catching(e);

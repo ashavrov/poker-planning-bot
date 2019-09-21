@@ -2,8 +2,6 @@ package commands;
 
 import java.util.ArrayList;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class QuestionAnswerHandler {
 	private ArrayList<String> arrayQuestion = new ArrayList<>();

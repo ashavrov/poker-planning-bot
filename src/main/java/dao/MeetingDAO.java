@@ -7,26 +7,40 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import entities.Meeting;
+import entities.User;
 
 public class MeetingDAO extends DAO<Meeting> {
 	private static Logger log = LogManager.getLogger(MeetingDAO.class);
 	private ArrayList<Meeting> meetings = new ArrayList<>();
+	private HashMap<String,ArrayList<User>> users = new HashMap<>();
 
-	public void executeSQL(String sqlText) throws SQLException {
+	public void executeSQL(String sqlText, String tableName) throws SQLException {
 		try (Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"))) {
 			try (Statement statement = connection.createStatement()) {
 				statement.execute(sqlText);
 				try (ResultSet resultSet = statement.getResultSet()) {
 					if (resultSet != null) {
-						getMeetingSQL(resultSet);
+						if ("meetings".equals(tableName)) {
+							getMeetingSQL(resultSet);
+						} else if ("meeting_user".equals(tableName)) {
+							getUserSQL(resultSet);
+						}
 					}
 				}
 			}
+		}
+	}
+
+	private void getUserSQL(ResultSet resultSet) throws SQLException {
+		while (resultSet.next()) {
+			users.get(resultSet.getObject("meetingId").toString()).add(new User(resultSet.getObject("userId").toString(), resultSet.getObject("chatId").toString(),
+					resultSet.getObject("name").toString()));
 		}
 	}
 
@@ -34,12 +48,15 @@ public class MeetingDAO extends DAO<Meeting> {
 		while (resultSet.next()) {
 			meetings.add(new Meeting(resultSet.getObject("name").toString(), resultSet.getObject("date").toString(),
 					resultSet.getObject("meetingid").toString()));
+			users.put(resultSet.getObject("meetingid").toString(), new ArrayList<>());
 		}
 	}
 
 	public MeetingDAO() {
 		try {
-			executeSQL("SELECT name, date, meetingid FROM bot.meetings;");
+			executeSQL("SELECT name, date, meetingid FROM bot.meetings", "meetings");
+			executeSQL("SELECT bot.users.userId, chatId, name, meetingid "
+					+ "FROM bot.meeting_user JOIN bot.users ON bot.meeting_user.userId = bot.users.userId", "meeting_user");
 		} catch (SQLException e) {
 			log.catching(e);
 		}
@@ -50,11 +67,12 @@ public class MeetingDAO extends DAO<Meeting> {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		try {
 			executeSQL("INSERT INTO bot.meetings (name, date, meetingId) " + "VALUES ('" + obj.getName()
-					+ "', TIMESTAMP '" + formatter.format(obj.getDate()) + "','" + obj.getMeetingId() + "')");
+					+ "', TIMESTAMP '" + formatter.format(obj.getDate()) + "','" + obj.getMeetingId() + "')", "meetings");
 		} catch (SQLException e) {
 			log.catching(e);
 		}
 		meetings.add(obj);
+		users.put(obj.getMeetingId(), new ArrayList<>());
 	}
 
 	@Override
@@ -81,7 +99,7 @@ public class MeetingDAO extends DAO<Meeting> {
 	public void update(Meeting obj) {
 		try {
 			executeSQL("UPDATE bot.meetings " + "SET name='" + obj.getName() + "', date='" + obj.getDate() + "' "
-					+ "WHERE meetingId='" + obj.getMeetingId() + "'");
+					+ "WHERE meetingId='" + obj.getMeetingId() + "'", "meetings");
 		} catch (SQLException e) {
 			log.catching(e);
 		}
@@ -96,15 +114,31 @@ public class MeetingDAO extends DAO<Meeting> {
 	@Override
 	public void delete(Meeting obj) {
 		try {
-			executeSQL("DELETE FROM bot.meetings WHERE meetingId='" + obj.getMeetingId() + "'");
+			executeSQL("DELETE FROM bot.meetings WHERE meetingId='" + obj.getMeetingId() + "'", "meetings");
+			executeSQL("DELETE FROM bot.meeting_user WHERE meetingId='" + obj.getMeetingId() + "'", "meeting_user");
 		} catch (SQLException e) {
 			log.catching(e);
 		}
 		meetings.remove(obj);
+		users.remove(obj.getMeetingId());
 	}
 
 	@Override
 	public ArrayList<Meeting> getAll() {
 		return meetings;
+	}
+
+	public void addUser(User user, Meeting meeting) {
+		try {
+			executeSQL("INSERT INTO bot.meeting_user " + "(userid, meetingid, primaryflag)" + "VALUES('"
+					+ user.getUserId() + "', '" + meeting.getMeetingId() + "', 'N')", "meeting_user");
+		} catch (SQLException e) {
+			log.catching(e);
+		}
+		users.get(meeting.getMeetingId()).add(user);
+	}
+
+	public ArrayList<User> getAllUsers(Meeting meeting) {
+		return users.get(meeting.getMeetingId());
 	}
 }

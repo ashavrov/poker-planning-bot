@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import dao.MeetingDAO;
+import dao.UserDAO;
 import entities.Meeting;
 
 public class MeetingDAOTest {
@@ -20,6 +21,9 @@ public class MeetingDAOTest {
 		Assert.assertNotNull(meetingDAO);
 		Meeting meeting = new Meeting(formatter.parse(formatter.format(new Date())), "Test meeting");
 		meetingDAO.insert(meeting);
+		meetingDAO.addUser(new UserDAO().getById("174913663"), meeting);
+		
+		Assert.assertTrue(meetingDAO.getAllUsers(meeting).get(0).equals(new UserDAO().getById("174913663")));
 		
 		meetingDAO = null;
 		meetingDAO = new MeetingDAO();
@@ -28,6 +32,7 @@ public class MeetingDAOTest {
 		Assert.assertTrue(meeting.equals(meetingFromDB));
 		meetingDAO.delete(meeting);
 		Assert.assertNull(meetingDAO.getById(meeting.getMeetingId()));
+		Assert.assertNull(meetingDAO.getAllUsers(meetingFromDB));
 	}
 
 	@Test
