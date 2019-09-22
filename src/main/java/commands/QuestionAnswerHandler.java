@@ -1,6 +1,7 @@
 package commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class QuestionAnswerHandler {
@@ -22,7 +23,7 @@ public class QuestionAnswerHandler {
 		return arrayQuestion.isEmpty();
 	}
 
-	public ArrayList<MessageCommandOut> getNewQuestion(MessageCommandIn message) {
+	public List<MessageCommandOut> getNewQuestion(MessageCommandIn message) {
 		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
 		MessageCommandOut messageOut = new MessageCommandOut(message, message.getDeleteMessageId());
 		if (!isQuestionExists()) {
@@ -40,10 +41,11 @@ public class QuestionAnswerHandler {
 	}
 
 	public String getFullCommand() {
-		String fullCommand = command;
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(command);
 		for (String answer : arrayAnswer) {
-			fullCommand += " " + answer;
+			stringBuilder.append(" ").append(answer);
 		}
-		return fullCommand;
+		return stringBuilder.toString();
 	}
 }

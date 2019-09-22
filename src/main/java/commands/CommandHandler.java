@@ -21,12 +21,14 @@ public class CommandHandler {
 
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		List<MessageCommandOut> messagesOut = new ArrayList<>();
-		if (questionAnswerHandlers.containsKey(message.getUserId().toString())) {
-			if (questionAnswerHandlers.get(message.getUserId().toString()).isQuestionExists()) {
-				questionAnswerHandlers.get(message.getUserId().toString()).addAnswer(message.getMessage());
-				messagesOut = questionAnswerHandlers.get(message.getUserId().toString()).getNewQuestion(message);
-				if(!questionAnswerHandlers.get(message.getUserId().toString()).isQuestionExists()) {
-					questionAnswerHandlers.remove(message.getUserId().toString());
+		String userId = message.getUserId().toString();
+		if (questionAnswerHandlers.containsKey(userId)) {
+			QuestionAnswerHandler questionAnswerHandler = questionAnswerHandlers.get(userId);
+			if (questionAnswerHandler.isQuestionExists()) {
+				questionAnswerHandler.addAnswer(message.getMessage());
+				messagesOut = questionAnswerHandler.getNewQuestion(message);
+				if(!questionAnswerHandler.isQuestionExists()) {
+					questionAnswerHandlers.remove(userId);
 				}
 				return messagesOut;
 			}

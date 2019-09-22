@@ -27,6 +27,7 @@ public class MessageCommandIn {
 
 	public void setMessage(String message) {
 		this.message = message;
+		this.command = message.split(" ")[0];
 	}
 
 	public Integer getUserId() {

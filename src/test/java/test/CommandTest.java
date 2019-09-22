@@ -1,5 +1,7 @@
 package test;
 
+import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,14 +28,16 @@ public class CommandTest {
 
 	@Test
 	public void testCommandCreateMeeting() {
-		MessageCommandIn message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01-01\" \"12:00\"", 174913664,
-				(long) 1234, "Test", null);
+		MessageCommandIn message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01-01\" \"12:00\"",
+				174913664, (long) 1234, "Test", null);
 		String text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Встреча создана.", text);
-		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\" \"45:00\"", 174913664, (long) 1234, "Test", null);
+		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\" \"45:00\"", 174913664,
+				(long) 1234, "Test", null);
 		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Ошибка при создании встречи.", text);
-		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\"", 174913664, (long) 1234, "Test", null);
+		message = new MessageCommandIn("/createMeeting \"TestFromUnitTest\" \"2019-01 01\"", 174913664, (long) 1234,
+				"Test", null);
 		text = handler.execute(message).get(0).getMessage().getText();
 		Assert.assertEquals("Ошибка при создании встречи. Неверный формат команды.", text);
 	}
@@ -47,16 +51,19 @@ public class CommandTest {
 
 	@Test
 	public void testConstructorCommands() {
-		MessageCommandIn message = new MessageCommandIn("/constructorCommand /createMeeting", 1234, (long) 1234, "Test", null);
+		MessageCommandIn message = new MessageCommandIn("/constructorCommand /createMeeting", 1234, (long) 1234, "Test",
+				null);
 		MessageCommandIn messageInAnswer = new MessageCommandIn("answer", 2123, (long) 123, "Test", null);
 		MessageCommandOut messageOut = handler.execute(message).get(0);
 		Assert.assertEquals("Введите название:", messageOut.getMessage().getText());
-		while(messageOut.getQuestionAnswerHandler().isQuestionExists()) {
+		while (messageOut.getQuestionAnswerHandler().isQuestionExists()) {
 			messageOut.getQuestionAnswerHandler().getNewQuestion(messageInAnswer);
 			messageOut.getQuestionAnswerHandler().addAnswer("answer");
 		}
-		Assert.assertEquals(messageOut.getQuestionAnswerHandler().getFullCommand(), "/createMeeting \"answer\" \"answer\" \"answer\"");
+		Assert.assertEquals("/createMeeting \"answer\" \"answer\" \"answer\"",
+				messageOut.getQuestionAnswerHandler().getFullCommand());
 	}
+
 	@Test
 	public void testCommandShowMenu() {
 		MessageCommandIn message = new MessageCommandIn("/showMenu", 1234, (long) 1234, "Test", null);
@@ -75,6 +82,36 @@ public class CommandTest {
 		message = new MessageCommandIn("12:00", 1234, (long) 1234, "Test", null);
 		messageOut = handler.execute(message).get(0);
 		Assert.assertEquals("Необходимо подтверждение:", messageOut.getMessage().getText());
+	}
+
+	@Test
+	public void testCommandAddUser() {
+		UserDAO userDAO = new UserDAO();
+		MeetingDAO meetingDAO = new MeetingDAO();
+		Meeting meeting = meetingDAO.getByName("TestFromUnitTest");
+		User user = userDAO.getById("1234");
+
+		MessageCommandIn messageIn1 = new MessageCommandIn("/addUser", 1234, (long) 1234, "Test", null);
+		MessageCommandOut messageOut1 = handler.execute(messageIn1).get(0);
+		Assert.assertEquals("Ошибка при добавлении участника. Неверный формат команды.",
+				messageOut1.getMessage().getText());
+
+		MessageCommandIn messageIn2 = new MessageCommandIn("/addUser \"123\" \"123\"", 1234, (long) 1234, "Test", null);
+		MessageCommandOut messageOut2 = handler.execute(messageIn2).get(0);
+		Assert.assertEquals("Некорректно заданая встреча.", messageOut2.getMessage().getText());
+
+		MessageCommandIn messageIn3 = new MessageCommandIn("/addUser \"123\" \"" + meeting.getMeetingId() + "\"", 1234,
+				(long) 1234, "Test", null);
+		MessageCommandOut messageOut3 = handler.execute(messageIn3).get(0);
+		Assert.assertEquals("Некорректно задан пользователь.", messageOut3.getMessage().getText());
+
+		MessageCommandIn messageIn4 = new MessageCommandIn(
+				"/addUser \"" + user.getUserId() + "\" \"" + meeting.getMeetingId() + "\"", 1234, (long) 1234, "Test",
+				null);
+		List<MessageCommandOut> messageOut4 = handler.execute(messageIn4);
+		Assert.assertEquals("Вы добавленны во встречу \"" + meeting.getName() + "\"",
+				messageOut4.get(0).getMessage().getText());
+		Assert.assertEquals("Пользователь добавлен.", messageOut4.get(1).getMessage().getText());
 	}
 
 	@AfterClass

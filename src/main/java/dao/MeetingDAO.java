@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +17,9 @@ import entities.Meeting;
 import entities.User;
 
 public class MeetingDAO extends DAO<Meeting> {
+	private static final String TABLE_MEETINGS = "meeting";
+	private static final String TABLE_MEETING_USER = "meeting_user";
+	
 	private static Logger log = LogManager.getLogger(MeetingDAO.class);
 	private ArrayList<Meeting> meetings = new ArrayList<>();
 	private HashMap<String,ArrayList<User>> users = new HashMap<>();
@@ -26,9 +30,9 @@ public class MeetingDAO extends DAO<Meeting> {
 				statement.execute(sqlText);
 				try (ResultSet resultSet = statement.getResultSet()) {
 					if (resultSet != null) {
-						if ("meetings".equals(tableName)) {
+						if (TABLE_MEETINGS.equals(tableName)) {
 							getMeetingSQL(resultSet);
-						} else if ("meeting_user".equals(tableName)) {
+						} else if (TABLE_MEETING_USER.equals(tableName)) {
 							getUserSQL(resultSet);
 						}
 					}
@@ -54,9 +58,9 @@ public class MeetingDAO extends DAO<Meeting> {
 
 	public MeetingDAO() {
 		try {
-			executeSQL("SELECT name, date, meetingid FROM bot.meetings", "meetings");
+			executeSQL("SELECT name, date, meetingid FROM bot.meetings", TABLE_MEETINGS);
 			executeSQL("SELECT bot.users.userId, chatId, name, meetingid "
-					+ "FROM bot.meeting_user JOIN bot.users ON bot.meeting_user.userId = bot.users.userId", "meeting_user");
+					+ "FROM bot.meeting_user JOIN bot.users ON bot.meeting_user.userId = bot.users.userId", TABLE_MEETING_USER);
 		} catch (SQLException e) {
 			log.catching(e);
 		}
@@ -67,7 +71,7 @@ public class MeetingDAO extends DAO<Meeting> {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		try {
 			executeSQL("INSERT INTO bot.meetings (name, date, meetingId) " + "VALUES ('" + obj.getName()
-					+ "', TIMESTAMP '" + formatter.format(obj.getDate()) + "','" + obj.getMeetingId() + "')", "meetings");
+					+ "', TIMESTAMP '" + formatter.format(obj.getDate()) + "','" + obj.getMeetingId() + "')", TABLE_MEETINGS);
 		} catch (SQLException e) {
 			log.catching(e);
 		}
@@ -99,7 +103,7 @@ public class MeetingDAO extends DAO<Meeting> {
 	public void update(Meeting obj) {
 		try {
 			executeSQL("UPDATE bot.meetings " + "SET name='" + obj.getName() + "', date='" + obj.getDate() + "' "
-					+ "WHERE meetingId='" + obj.getMeetingId() + "'", "meetings");
+					+ "WHERE meetingId='" + obj.getMeetingId() + "'", TABLE_MEETINGS);
 		} catch (SQLException e) {
 			log.catching(e);
 		}
@@ -114,8 +118,8 @@ public class MeetingDAO extends DAO<Meeting> {
 	@Override
 	public void delete(Meeting obj) {
 		try {
-			executeSQL("DELETE FROM bot.meetings WHERE meetingId='" + obj.getMeetingId() + "'", "meetings");
-			executeSQL("DELETE FROM bot.meeting_user WHERE meetingId='" + obj.getMeetingId() + "'", "meeting_user");
+			executeSQL("DELETE FROM bot.meetings WHERE meetingId='" + obj.getMeetingId() + "'", TABLE_MEETINGS);
+			executeSQL("DELETE FROM bot.meeting_user WHERE meetingId='" + obj.getMeetingId() + "'", TABLE_MEETING_USER);
 		} catch (SQLException e) {
 			log.catching(e);
 		}
@@ -124,21 +128,21 @@ public class MeetingDAO extends DAO<Meeting> {
 	}
 
 	@Override
-	public ArrayList<Meeting> getAll() {
+	public List<Meeting> getAll() {
 		return meetings;
 	}
 
 	public void addUser(User user, Meeting meeting) {
 		try {
 			executeSQL("INSERT INTO bot.meeting_user " + "(userid, meetingid, primaryflag)" + "VALUES('"
-					+ user.getUserId() + "', '" + meeting.getMeetingId() + "', 'N')", "meeting_user");
+					+ user.getUserId() + "', '" + meeting.getMeetingId() + "', 'N')", TABLE_MEETING_USER);
 		} catch (SQLException e) {
 			log.catching(e);
 		}
 		users.get(meeting.getMeetingId()).add(user);
 	}
 
-	public ArrayList<User> getAllUsers(Meeting meeting) {
+	public List<User> getAllUsers(Meeting meeting) {
 		return users.get(meeting.getMeetingId());
 	}
 }

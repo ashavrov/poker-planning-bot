@@ -39,7 +39,7 @@ public class CommandAddUser implements Command {
 				}
 			} else {
 				listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId())
-						.setText("Некорректно заданая встреча"));
+						.setText("Некорректно заданая встреча."));
 			}
 
 		} else {
