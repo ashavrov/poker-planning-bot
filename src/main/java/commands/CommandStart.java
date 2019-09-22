@@ -10,7 +10,7 @@ public class CommandStart implements Command {
 	@Override
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
-		MessageCommandOut messageOut = new MessageCommandOut(message);
+		MessageCommandOut messageOut = new MessageCommandOut(message, null);
 		UserDAO userDAO = new UserDAO();
 		User user = userDAO.getById(message.getUserId().toString());
 		if (user == null) {

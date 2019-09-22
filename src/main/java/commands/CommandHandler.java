@@ -1,26 +1,57 @@
 package commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
- * @author ashavrov Command handler class
+ * Handler message class
+ * 
+ * @author ashavrov
+ * 
  */
 public class CommandHandler {
+	private HashMap<String, QuestionAnswerHandler> questionAnswerHandlers = new HashMap<>();
+
 	private CommandStart commandStart = new CommandStart();
+	private ConstrunctorCommand constructorCommand = new ConstrunctorCommand();
 	private CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
+	private CommandShowMenu commandShowMenu = new CommandShowMenu();
+	private CommandAddUser commandAddUser = new CommandAddUser();
 
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
-		if ("/start".equals(message.getCommand())) {
-			return commandStart.execute(message);
-		} else if ("/createMeeting".equals(message.getCommand())) {
-			return commandCreateMeeting.execute(message);
-		} else {
-			ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
-			MessageCommandOut messageOut = new MessageCommandOut(message);
-			messageOut.setText("Неизвестная команда.");
-			listMessagesOut.add(messageOut);
-			return listMessagesOut;
+		List<MessageCommandOut> messagesOut = new ArrayList<>();
+		String userId = message.getUserId().toString();
+		if (questionAnswerHandlers.containsKey(userId)) {
+			QuestionAnswerHandler questionAnswerHandler = questionAnswerHandlers.get(userId);
+			if (questionAnswerHandler.isQuestionExists()) {
+				questionAnswerHandler.addAnswer(message.getMessage());
+				messagesOut = questionAnswerHandler.getNewQuestion(message);
+				if(!questionAnswerHandler.isQuestionExists()) {
+					questionAnswerHandlers.remove(userId);
+				}
+				return messagesOut;
+			}
 		}
+		if ("/constructorCommand".equals(message.getCommand())) {
+			messagesOut = constructorCommand.execute(message);
+		} else if ("/start".equals(message.getCommand())) {
+			messagesOut = commandStart.execute(message);
+		} else if ("/createMeeting".equals(message.getCommand())) {
+			messagesOut = commandCreateMeeting.execute(message);
+		} else if ("/showMenu".equals(message.getCommand())) {
+			messagesOut = commandShowMenu.execute(message);
+		} else if ("/addUser".equals(message.getCommand())) {
+			messagesOut = commandAddUser.execute(message);
+		} else {
+			messagesOut
+					.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Неизвестная команда."));
+		}
+		for (MessageCommandOut messageOut : messagesOut) {
+			if (messageOut.isQuestionExists()) {
+				questionAnswerHandlers.put(messageOut.getUserId(), messageOut.getQuestionAnswerHandler());
+			}
+		}
+		return messagesOut;
 	}
 }
