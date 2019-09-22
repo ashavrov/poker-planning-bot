@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import entities.User;
 
-public class UserDAO extends DAO<User> {
+public class UserDAO implements DAO<User> {
 	private static Logger log = LogManager.getLogger(UserDAO.class);
 	private ArrayList<User> users = new ArrayList<>();
 

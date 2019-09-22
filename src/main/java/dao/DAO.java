@@ -2,7 +2,7 @@ package dao;
 
 import java.util.List;
 
-public abstract class DAO<T> {
+public interface DAO<T> {
 	  public abstract void insert(T obj);
 	  public abstract T getById(String id);
 	  public abstract T getByName(String name);

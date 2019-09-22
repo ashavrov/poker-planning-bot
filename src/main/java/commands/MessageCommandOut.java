@@ -1,7 +1,9 @@
 package commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -85,6 +87,19 @@ public class MessageCommandOut {
 		List<InlineKeyboardButton> rowInline = new ArrayList<>();
 		rowInline.add(new InlineKeyboardButton().setText(text).setCallbackData(callBack));
 		rowsInline.add(rowInline);
+		markupInline.setKeyboard(rowsInline);
+		message.setReplyMarkup(markupInline);
+		return this;
+	}
+
+	public MessageCommandOut addButtons(HashMap<String, String> buttonHashMap) {
+		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+		for (Map.Entry<String, String> entry : buttonHashMap.entrySet()) {
+			List<InlineKeyboardButton> rowInline = new ArrayList<>();
+			rowInline.add(new InlineKeyboardButton().setText(entry.getKey()).setCallbackData(entry.getValue()));
+			rowsInline.add(rowInline);
+		}
 		markupInline.setKeyboard(rowsInline);
 		message.setReplyMarkup(markupInline);
 		return this;

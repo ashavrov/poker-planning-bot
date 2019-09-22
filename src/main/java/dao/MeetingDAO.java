@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 import entities.Meeting;
 import entities.User;
 
-public class MeetingDAO extends DAO<Meeting> {
+public class MeetingDAO implements DAO<Meeting> {
 	private static final String TABLE_MEETINGS = "meeting";
 	private static final String TABLE_MEETING_USER = "meeting_user";
 	

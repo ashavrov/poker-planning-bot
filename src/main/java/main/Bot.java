@@ -58,8 +58,9 @@ public class Bot extends TelegramLongPollingBot {
 				if (message.getMessageDelete() != null) {
 					execute(message.getMessageDelete());
 				}
+				log.error(message.getMessage());
 				execute(message.getMessage());
-			}
+			}	
 		} catch (TelegramApiException e) {
 			log.catching(e);
 		}
