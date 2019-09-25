@@ -59,6 +59,7 @@ public class CommandHandler {
 			default:
 				messagesOut
 						.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Неизвестная команда."));
+				break;
 		}
 		for (MessageCommandOut messageOut : messagesOut) {
 			if (messageOut.isQuestionExists()) {

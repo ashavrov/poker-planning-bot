@@ -1,11 +1,5 @@
 package test;
 
-import java.util.List;
-
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Test;
-
 import commands.CommandHandler;
 import commands.MessageCommandIn;
 import commands.MessageCommandOut;
@@ -13,6 +7,11 @@ import dao.MeetingDAO;
 import dao.UserDAO;
 import entities.Meeting;
 import entities.User;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.List;
 
 public class CommandTest {
 	private final CommandHandler handler = new CommandHandler();
@@ -114,6 +113,34 @@ public class CommandTest {
 		Assert.assertEquals("Пользователь добавлен.", messageOut4.get(1).getMessage().getText());
 	}
 
+	@Test
+	public void testCommandGetMeetings() {
+		MessageCommandIn messageIn1 = new MessageCommandIn("/getMeetings", 1234, (long) 1234, "Test", null);
+		MessageCommandOut messageOut1 = handler.execute(messageIn1).get(0);
+		Assert.assertEquals("Детализация:", messageOut1.getMessage().getText());
+	}
+
+	@Test
+	public void testCommandGetMeetingCommands() {
+		MessageCommandIn message = new MessageCommandIn("/createMeeting \"testCommandGetMeetingCommands\" \"2019-01-01\" \"12:00\"",
+				174913664, (long) 1234, "Test", null);
+		String text = handler.execute(message).get(0).getMessage().getText();
+		Assert.assertEquals("Встреча создана.", text);
+		MeetingDAO meetingDAO = new MeetingDAO();
+		Meeting meeting = meetingDAO.getByName("testCommandGetMeetingCommands");
+		MessageCommandIn messageIn1 = new MessageCommandIn("/getMeetingCommands \"" + meeting.getMeetingId() + "\"", 1234, (long) 1234, "Test", null);
+		MessageCommandOut messageOut1 = handler.execute(messageIn1).get(0);
+		Assert.assertEquals("Создать игру:", messageOut1.getMessage().getText());
+		Assert.assertNotNull(messageOut1.getMessage().getReplyMarkup());
+		MessageCommandIn messageIn2 = new MessageCommandIn("/getMeetingCommands", 1234, (long) 1234, "Test", null);
+		MessageCommandOut messageOut2 = handler.execute(messageIn2).get(0);
+		Assert.assertEquals("Неверный формат команды.", messageOut2.getMessage().getText());
+		Assert.assertNotNull(messageOut2.getMessage().getReplyMarkup());
+		MessageCommandIn messageIn3 = new MessageCommandIn("/getMeetingCommands \"123\"", 1234, (long) 1234, "Test", null);
+		MessageCommandOut messageOut3 = handler.execute(messageIn3).get(0);
+		Assert.assertEquals("Некорректная встреча.", messageOut3.getMessage().getText());
+	}
+
 	@AfterClass
 	public static void deleteTestData() {
 		UserDAO userDAO = new UserDAO();
@@ -126,7 +153,10 @@ public class CommandTest {
 		Meeting meeting = meetingDAO.getByName("TestFromUnitTest");
 		Assert.assertEquals(meeting, meetingDAO.getByName("TestFromUnitTest"));
 		meetingDAO.delete(meeting);
+		meeting = meetingDAO.getByName("testCommandGetMeetingCommands");
+		meetingDAO.delete(meeting);
 		Assert.assertNull(meetingDAO.getByName("TestFromUnitTest"));
+		Assert.assertNull(meetingDAO.getByName("testCommandGetMeetingCommands"));
 	}
 
 }
