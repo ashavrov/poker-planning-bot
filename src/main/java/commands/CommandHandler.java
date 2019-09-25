@@ -11,15 +11,15 @@ import java.util.List;
  * 
  */
 public class CommandHandler {
-	private HashMap<String, QuestionAnswerHandler> questionAnswerHandlers = new HashMap<>();
+	private final HashMap<String, QuestionAnswerHandler> questionAnswerHandlers = new HashMap<>();
 
-	private CommandStart commandStart = new CommandStart();
-	private ConstrunctorCommand constructorCommand = new ConstrunctorCommand();
-	private CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
-	private CommandShowMenu commandShowMenu = new CommandShowMenu();
-	private CommandAddUser commandAddUser = new CommandAddUser();
-	private CommandGetMeetings commandGetMeetings = new CommandGetMeetings();
-	private CommandGetMeetingCommands commandGetMeetingCommands = new CommandGetMeetingCommands();
+	private final CommandStart commandStart = new CommandStart();
+	private final ConstructorCommand constructorCommand = new ConstructorCommand();
+	private final CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
+	private final CommandShowMenu commandShowMenu = new CommandShowMenu();
+	private final CommandAddUser commandAddUser = new CommandAddUser();
+	private final CommandGetMeetings commandGetMeetings = new CommandGetMeetings();
+	private final CommandGetMeetingCommands commandGetMeetingCommands = new CommandGetMeetingCommands();
 
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		List<MessageCommandOut> messagesOut = new ArrayList<>();

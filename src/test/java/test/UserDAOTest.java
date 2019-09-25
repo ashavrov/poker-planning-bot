@@ -19,7 +19,7 @@ public class UserDAOTest {
 		UserDAO userDAO = new UserDAO();
 		User user = new User("123", "123", "Test");
 		userDAO.insert(user);
-		Assert.assertTrue(user.equals(userDAO.getById("123")));
+        Assert.assertEquals(user, userDAO.getById("123"));
 		userDAO.delete(user);
 		Assert.assertNull(userDAO.getById("123"));
 	}
@@ -29,21 +29,15 @@ public class UserDAOTest {
 		UserDAO userDAO = new UserDAO();
 		User user = new User("234", "234", "Test2");
 		userDAO.insert(user);
-		Assert.assertTrue(user.equals(userDAO.getById("234")));
+        Assert.assertEquals(user, userDAO.getById("234"));
 		user.setName("Test3");
 		userDAO.update(user);
-		Assert.assertTrue(user.equals(userDAO.getById("234")));
-		Assert.assertTrue(userDAO.getById("234").equals(userDAO.getByName("Test3")));
+        Assert.assertEquals(user, userDAO.getById("234"));
+        Assert.assertEquals(userDAO.getById("234"), userDAO.getByName("Test3"));
 		Assert.assertNull(userDAO.getById("0987"));
 		Assert.assertNull(userDAO.getByName("noUser"));
 		userDAO.delete(user);
 		Assert.assertNull(userDAO.getById("123"));
-	}
-
-	@Test
-	public void testGetAll() {
-		UserDAO userDAO = new UserDAO();
-		Assert.assertNotNull(userDAO.getAll().isEmpty());
 	}
 
 }

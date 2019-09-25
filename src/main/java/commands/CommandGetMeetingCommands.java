@@ -10,11 +10,11 @@ public class CommandGetMeetingCommands implements Command {
 	@Override
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
-		Pattern patternCommand = Pattern.compile("^(\\/.*?)(\\s)(\\\".*\\\")$");
-		Matcher macherCommand = patternCommand.matcher(message.getMessage());
+		Pattern patternCommand = Pattern.compile("^(/.*?)(\\s)(\".*\")$");
+		Matcher matcherCommand = patternCommand.matcher(message.getMessage());
 
-		if (macherCommand.find()) {
-			String meetingId = macherCommand.group(3).replace("\"", "");
+		if (matcherCommand.find()) {
+			String meetingId = matcherCommand.group(3).replace("\"", "");
 			listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Создать игру:")
 					.addButton("Создать", "/createGame +\"" + meetingId + "\""));
 

@@ -20,21 +20,19 @@ public class MeetingTest {
 		Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String stringDate = formatter.format(new Date());
 		Meeting meeting3 = new Meeting("Meeting1", stringDate, meeting1.getMeetingId());
-		Meeting meeting4 = meeting1;
 		Meeting meeting5 = new Meeting(null, null, null);
 		Meeting meeting6 = new Meeting(null, null);
-		Meeting meeting7 = null;
-		Assert.assertTrue(meeting1.hashCode() == meeting4.hashCode());
+		Assert.assertEquals(meeting1.hashCode(), meeting1.hashCode());
 		Assert.assertTrue(meeting1.hashCode() != meeting2.hashCode());
-		Assert.assertTrue(meeting1.equals(meeting4));
-		Assert.assertTrue(!meeting1.equals(meeting2));
-		Assert.assertTrue(!meeting2.equals(meeting3));
-		Assert.assertTrue(!meeting1.equals(meeting7));
-		Assert.assertTrue(meeting1 != null);
-		Assert.assertTrue(!meeting1.equals(new Object()));
-		Assert.assertTrue(meeting1.getName().equals("Meeting1"));
-		Assert.assertTrue(meeting1.getDate().equals(date));
-		Assert.assertTrue(!meeting3.getDate().equals(new Date()));
+		Assert.assertEquals(meeting1, meeting1);
+		Assert.assertNotEquals(meeting1, meeting2);
+		Assert.assertNotEquals(meeting2, meeting3);
+		Assert.assertNotEquals(meeting1, null);
+		Assert.assertNotNull(meeting1);
+		Assert.assertNotEquals(meeting1, new Object());
+		Assert.assertEquals("Meeting1", meeting1.getName());
+		Assert.assertEquals(meeting1.getDate(), date);
+		Assert.assertNotEquals(meeting3.getDate(), new Date());
 		User user1 = new User("123123", "23423423", "TestUser");
 		User user2 = new User("234234", "34534534", "TestUser2");
 		meeting1.addUser(user1);
@@ -42,13 +40,13 @@ public class MeetingTest {
 		meeting2.addUser(user1);
 		meeting1.setPrimaryUser(user1);
 		meeting2.setPrimaryUser(user1);
-		Assert.assertTrue(meeting1.getPrimaryUser() == meeting2.getPrimaryUser());
-		Assert.assertTrue(meeting1.getUsers() != meeting2.getUsers());
-		Assert.assertTrue(meeting5.getMeetingId().equals(""));
-		Assert.assertTrue(meeting5.getName().equals(""));
-		Assert.assertTrue(meeting5.getDate() != null);
-		Assert.assertTrue(meeting6.getDate() != null);
-		Assert.assertTrue(meeting6.getName() != null);
+		Assert.assertSame(meeting1.getPrimaryUser(), meeting2.getPrimaryUser());
+		Assert.assertNotSame(meeting1.getUsers(), meeting2.getUsers());
+		Assert.assertEquals("", meeting5.getMeetingId());
+		Assert.assertEquals("", meeting5.getName());
+		Assert.assertNotNull(meeting5.getDate());
+		Assert.assertNotNull(meeting6.getDate());
+		Assert.assertNotNull(meeting6.getName());
 	}
 
 }

@@ -20,11 +20,11 @@ public class MeetingDAO implements DAO<Meeting> {
 	private static final String TABLE_MEETINGS = "meeting";
 	private static final String TABLE_MEETING_USER = "meeting_user";
 	
-	private static Logger log = LogManager.getLogger(MeetingDAO.class);
-	private ArrayList<Meeting> meetings = new ArrayList<>();
-	private HashMap<String,ArrayList<User>> users = new HashMap<>();
+	private static final Logger log = LogManager.getLogger(MeetingDAO.class);
+	private final ArrayList<Meeting> meetings = new ArrayList<>();
+	private final HashMap<String,ArrayList<User>> users = new HashMap<>();
 
-	public void executeSQL(String sqlText, String tableName) throws SQLException {
+	private void executeSQL(String sqlText, String tableName) throws SQLException {
 		try (Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"))) {
 			try (Statement statement = connection.createStatement()) {
 				statement.execute(sqlText);

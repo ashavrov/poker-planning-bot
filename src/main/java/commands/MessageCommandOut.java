@@ -16,10 +16,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import entities.User;
 
 public class MessageCommandOut {
-	private SendMessage message = new SendMessage();
+	private final SendMessage message = new SendMessage();
 	private DeleteMessage messageDelete = null;
 	private QuestionAnswerHandler questionAnswerHandler = new QuestionAnswerHandler("");
-	private String userId = null;
+	private final String userId;
 
 	public MessageCommandOut(MessageCommandIn messageIn, Integer deleteMessageId) {
 		setChatId(messageIn.getChatId().toString());
@@ -40,7 +40,7 @@ public class MessageCommandOut {
 		setButtons();
 	}
 
-	public void setChatId(String chatId) {
+	private void setChatId(String chatId) {
 		message.setChatId(chatId);
 	}
 
@@ -77,7 +77,7 @@ public class MessageCommandOut {
 		questionAnswerHandler.addAnswer(answer);
 	}
 
-	public String getComandText() {
+	public String getCommandText() {
 		return questionAnswerHandler.getFullCommand();
 	}
 
@@ -92,7 +92,7 @@ public class MessageCommandOut {
 		return this;
 	}
 
-	public MessageCommandOut addButtons(HashMap<String, String> buttonHashMap) {
+	public void addButtons(HashMap<String, String> buttonHashMap) {
 		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
 		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
 		for (Map.Entry<String, String> entry : buttonHashMap.entrySet()) {
@@ -102,7 +102,6 @@ public class MessageCommandOut {
 		}
 		markupInline.setKeyboard(rowsInline);
 		message.setReplyMarkup(markupInline);
-		return this;
 	}
 
 	private void setButtons() {

@@ -15,7 +15,7 @@ import entities.Meeting;
 import entities.User;
 
 public class CommandCreateMeeting implements Command {
-	private static Logger log = LogManager.getLogger(CommandCreateMeeting.class);
+	private static final Logger log = LogManager.getLogger(CommandCreateMeeting.class);
 
 	@Override
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
@@ -23,14 +23,14 @@ public class CommandCreateMeeting implements Command {
 		MeetingDAO meetingDAO = new MeetingDAO();
 		UserDAO userDAO = new UserDAO();
 
-		Pattern patternCommand = Pattern.compile("^(\\/.*?)(\\s)(\\\".*\\\")(\\s)(\".*\")(\\s)(\".*\")$");
-		Matcher macherCommand = patternCommand.matcher(message.getMessage());
+		Pattern patternCommand = Pattern.compile("^(/.*?)(\\s)(\".*\")(\\s)(\".*\")(\\s)(\".*\")$");
+		Matcher matcherCommand = patternCommand.matcher(message.getMessage());
 
-		if (macherCommand.find()) {
+		if (matcherCommand.find()) {
 			try {
-				String meetingName = macherCommand.group(3).replace("\"", "");
-				String stringDate = macherCommand.group(5).replace("\"", "");
-				String stringTime = macherCommand.group(7).replace("\"", "");
+				String meetingName = matcherCommand.group(3).replace("\"", "");
+				String stringDate = matcherCommand.group(5).replace("\"", "");
+				String stringTime = matcherCommand.group(7).replace("\"", "");
 				Meeting meeting = new Meeting(
 						new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(stringDate + " " + stringTime), meetingName);
 				meetingDAO.insert(meeting);

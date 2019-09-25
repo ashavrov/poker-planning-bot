@@ -10,13 +10,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Meeting {
-	private static Logger log = LogManager.getLogger(Meeting.class);
+	private static final Logger log = LogManager.getLogger(Meeting.class);
 	private Date date = new Date();
-	private ArrayList<User> users = new ArrayList<>();
+	private final ArrayList<User> users = new ArrayList<>();
 	private User primaryUser = null;
 
-	private String name = "";
-	private String meetingId = "";
+	private String name;
+	private final String meetingId;
 
 	public User getPrimaryUser() {
 		return primaryUser;
