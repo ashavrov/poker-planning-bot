@@ -3,7 +3,7 @@ package commands;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConstrunctorCommand implements Command {
+public class ConstructorCommand implements Command {
 
 	@Override
 	public List<MessageCommandOut> execute(MessageCommandIn message) {

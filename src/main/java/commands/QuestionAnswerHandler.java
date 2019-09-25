@@ -5,9 +5,9 @@ import java.util.List;
 
 
 public class QuestionAnswerHandler {
-	private ArrayList<String> arrayQuestion = new ArrayList<>();
-	private ArrayList<String> arrayAnswer = new ArrayList<>();
-	private String command = "";
+	private final ArrayList<String> arrayQuestion = new ArrayList<>();
+	private final ArrayList<String> arrayAnswer = new ArrayList<>();
+	private final String command;
 
 	public QuestionAnswerHandler(String command) {
 		this.command = command;
@@ -17,11 +17,10 @@ public class QuestionAnswerHandler {
 		arrayQuestion.add(question);
 	}
 
-	public boolean addAnswer(String answer) {
+	public void addAnswer(String answer) {
 		arrayAnswer.add("\"" + answer + "\"");
 		arrayQuestion.remove(0);
-		return arrayQuestion.isEmpty();
-	}
+    }
 
 	public List<MessageCommandOut> getNewQuestion(MessageCommandIn message) {
 		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();

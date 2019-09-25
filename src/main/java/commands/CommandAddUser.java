@@ -18,11 +18,11 @@ public class CommandAddUser implements Command {
 		MeetingDAO meetingDAO = new MeetingDAO();
 		UserDAO userDAO = new UserDAO();
 
-		Pattern patternCommand = Pattern.compile("^(\\/.*?)(\\s)(\\\".*\\\")(\\s)(\".*\")$");
-		Matcher macherCommand = patternCommand.matcher(message.getMessage());
-		if (macherCommand.find()) {
-			String userId = macherCommand.group(3).replace("\"", "");
-			String meetingId = macherCommand.group(5).replace("\"", "");
+		Pattern patternCommand = Pattern.compile("^(/.*?)(\\s)(\".*\")(\\s)(\".*\")$");
+		Matcher matcherCommand = patternCommand.matcher(message.getMessage());
+		if (matcherCommand.find()) {
+			String userId = matcherCommand.group(3).replace("\"", "");
+			String meetingId = matcherCommand.group(5).replace("\"", "");
 
 			if (meetingDAO.getById(meetingId) != null) {
 				if (userDAO.getById(userId) != null) {

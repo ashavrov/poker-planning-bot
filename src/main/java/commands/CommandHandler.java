@@ -6,20 +6,19 @@ import java.util.List;
 
 /**
  * Handler message class
- * 
+ *
  * @author ashavrov
- * 
  */
 public class CommandHandler {
-	private HashMap<String, QuestionAnswerHandler> questionAnswerHandlers = new HashMap<>();
+	private final HashMap<String, QuestionAnswerHandler> questionAnswerHandlers = new HashMap<>();
 
-	private CommandStart commandStart = new CommandStart();
-	private ConstrunctorCommand constructorCommand = new ConstrunctorCommand();
-	private CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
-	private CommandShowMenu commandShowMenu = new CommandShowMenu();
-	private CommandAddUser commandAddUser = new CommandAddUser();
-	private CommandGetMeetings commandGetMeetings = new CommandGetMeetings();
-	private CommandGetMeetingCommands commandGetMeetingCommands = new CommandGetMeetingCommands();
+	private final CommandStart commandStart = new CommandStart();
+	private final ConstructorCommand constructorCommand = new ConstructorCommand();
+	private final CommandCreateMeeting commandCreateMeeting = new CommandCreateMeeting();
+	private final CommandShowMenu commandShowMenu = new CommandShowMenu();
+	private final CommandAddUser commandAddUser = new CommandAddUser();
+	private final CommandGetMeetings commandGetMeetings = new CommandGetMeetings();
+	private final CommandGetMeetingCommands commandGetMeetingCommands = new CommandGetMeetingCommands();
 
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		List<MessageCommandOut> messagesOut = new ArrayList<>();
@@ -29,29 +28,37 @@ public class CommandHandler {
 			if (questionAnswerHandler.isQuestionExists()) {
 				questionAnswerHandler.addAnswer(message.getMessage());
 				messagesOut = questionAnswerHandler.getNewQuestion(message);
-				if(!questionAnswerHandler.isQuestionExists()) {
+				if (!questionAnswerHandler.isQuestionExists()) {
 					questionAnswerHandlers.remove(userId);
 				}
 				return messagesOut;
 			}
 		}
-		if ("/constructorCommand".equals(message.getCommand())) {
-			messagesOut = constructorCommand.execute(message);
-		} else if ("/start".equals(message.getCommand())) {
-			messagesOut = commandStart.execute(message);
-		} else if ("/createMeeting".equals(message.getCommand())) {
-			messagesOut = commandCreateMeeting.execute(message);
-		} else if ("/showMenu".equals(message.getCommand())) {
-			messagesOut = commandShowMenu.execute(message);
-		} else if ("/addUser".equals(message.getCommand())) {
-			messagesOut = commandAddUser.execute(message);
-		}else if ("/getMeetings".equals(message.getCommand())) {
+		switch (message.getCommand()) {
+			case "/constructorCommand":
+				messagesOut = constructorCommand.execute(message);
+				break;
+			case "/start":
+				messagesOut = commandStart.execute(message);
+				break;
+			case "/createMeeting":
+				messagesOut = commandCreateMeeting.execute(message);
+				break;
+			case "/showMenu":
+				messagesOut = commandShowMenu.execute(message);
+				break;
+			case "/addUser":
+				messagesOut = commandAddUser.execute(message);
+				break;
+			case "/getMeetings":
 				messagesOut = commandGetMeetings.execute(message);
-		}else if ("/getMeetingCommands".equals(message.getCommand())) {
-			messagesOut = commandGetMeetingCommands.execute(message);
-		} else {
-			messagesOut
-					.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Неизвестная команда."));
+				break;
+			case "/getMeetingCommands":
+				messagesOut = commandGetMeetingCommands.execute(message);
+				break;
+			default:
+				messagesOut
+						.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText("Неизвестная команда."));
 		}
 		for (MessageCommandOut messageOut : messagesOut) {
 			if (messageOut.isQuestionExists()) {

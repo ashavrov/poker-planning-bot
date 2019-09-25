@@ -15,7 +15,7 @@ import entities.Meeting;
 import entities.User;
 
 public class CommandTest {
-	private CommandHandler handler = new CommandHandler();
+	private final CommandHandler handler = new CommandHandler();
 
 	@Test
 	public void testCommandStart() {
@@ -118,13 +118,13 @@ public class CommandTest {
 	public static void deleteTestData() {
 		UserDAO userDAO = new UserDAO();
 		User user = userDAO.getById("1234");
-		Assert.assertTrue(user.equals(userDAO.getById("1234")));
+		Assert.assertEquals(user, userDAO.getById("1234"));
 		userDAO.delete(user);
 		Assert.assertNull(userDAO.getById("1234"));
 
 		MeetingDAO meetingDAO = new MeetingDAO();
 		Meeting meeting = meetingDAO.getByName("TestFromUnitTest");
-		Assert.assertTrue(meeting.equals(meetingDAO.getByName("TestFromUnitTest")));
+		Assert.assertEquals(meeting, meetingDAO.getByName("TestFromUnitTest"));
 		meetingDAO.delete(meeting);
 		Assert.assertNull(meetingDAO.getByName("TestFromUnitTest"));
 	}

@@ -1,12 +1,12 @@
 package commands;
 
 public class MessageCommandIn {
-	private String message = "";
-	private String command = "";
-	private Integer userId = 0;
-	private Long chatId = (long) 0;
-	private Integer deleteMessageId = null;
-	private String userName = "";
+	private String message;
+	private String command;
+	private Integer userId;
+	private Long chatId;
+	private final Integer deleteMessageId;
+	private String userName;
 
 	public MessageCommandIn(String message, Integer userId, Long chatId, String userName, Integer messageId) {
 		this.message = message;
