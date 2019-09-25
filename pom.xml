@@ -54,7 +54,8 @@
        	<artifactId>flyway-maven-plugin</artifactId>
        	<version>6.0.0</version>
        	<configuration>
-		    <url>${env.JDBC_DATABASE_URL}</url>
+		    <!--suppress UnresolvedMavenProperty -->
+            <url>${env.JDBC_DATABASE_URL}</url>
 		</configuration>
        </plugin>
        <plugin>

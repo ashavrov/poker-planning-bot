@@ -2,6 +2,7 @@ package commands;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
@@ -14,10 +15,10 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import entities.User;
 
 public class MessageCommandOut {
-	private SendMessage message = new SendMessage();
+	private final SendMessage message = new SendMessage();
 	private DeleteMessage messageDelete = null;
 	private QuestionAnswerHandler questionAnswerHandler = new QuestionAnswerHandler("");
-	private String userId = null;
+	private final String userId;
 
 	public MessageCommandOut(MessageCommandIn messageIn, Integer deleteMessageId) {
 		setChatId(messageIn.getChatId().toString());
@@ -38,7 +39,7 @@ public class MessageCommandOut {
 		setButtons();
 	}
 
-	public void setChatId(String chatId) {
+	private void setChatId(String chatId) {
 		message.setChatId(chatId);
 	}
 
@@ -75,7 +76,7 @@ public class MessageCommandOut {
 		questionAnswerHandler.addAnswer(answer);
 	}
 
-	public String getComandText() {
+	public String getCommandText() {
 		return questionAnswerHandler.getFullCommand();
 	}
 
@@ -88,6 +89,18 @@ public class MessageCommandOut {
 		markupInline.setKeyboard(rowsInline);
 		message.setReplyMarkup(markupInline);
 		return this;
+	}
+
+	public void addButtons(Map<String, String> buttonHashMap) {
+		InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+		List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+		for (Map.Entry<String, String> entry : buttonHashMap.entrySet()) {
+			List<InlineKeyboardButton> rowInline = new ArrayList<>();
+			rowInline.add(new InlineKeyboardButton().setText(entry.getKey()).setCallbackData(entry.getValue()));
+			rowsInline.add(rowInline);
+		}
+		markupInline.setKeyboard(rowsInline);
+		message.setReplyMarkup(markupInline);
 	}
 
 	private void setButtons() {

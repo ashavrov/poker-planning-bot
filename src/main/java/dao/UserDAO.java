@@ -12,11 +12,11 @@ import org.apache.logging.log4j.Logger;
 
 import entities.User;
 
-public class UserDAO extends DAO<User> {
-	private static Logger log = LogManager.getLogger(UserDAO.class);
-	private ArrayList<User> users = new ArrayList<>();
+public class UserDAO implements DAO<User> {
+	private static final Logger log = LogManager.getLogger(UserDAO.class);
+	private final ArrayList<User> users = new ArrayList<>();
 
-	public void executeSQL(String sqlText) throws SQLException {
+	private void executeSQL(String sqlText) throws SQLException {
 		try (Connection connection = DriverManager.getConnection(System.getenv("JDBC_DATABASE_URL"))) {
 			try (Statement statement = connection.createStatement()) {
 				statement.execute(sqlText);

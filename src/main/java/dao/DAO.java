@@ -2,11 +2,11 @@ package dao;
 
 import java.util.List;
 
-public abstract class DAO<T> {
-	  public abstract void insert(T obj);
-	  public abstract T getById(String id);
-	  public abstract T getByName(String name);
-	  public abstract void update(T obj);
-	  public abstract void delete(T obj);
-	  public abstract List<T> getAll();
+interface DAO<T> {
+	  void insert(T obj);
+	  T getById(String id);
+	  T getByName(String name);
+	  void update(T obj);
+	  void delete(T obj);
+	  List<T> getAll();
 }

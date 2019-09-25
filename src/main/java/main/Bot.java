@@ -13,8 +13,8 @@ import commands.MessageCommandIn;
 import commands.MessageCommandOut;
 
 public class Bot extends TelegramLongPollingBot {
-	private static Logger log = LogManager.getLogger(Bot.class);
-	private CommandHandler commandHandler = new CommandHandler();
+	private static final Logger log = LogManager.getLogger(Bot.class);
+	private final CommandHandler commandHandler = new CommandHandler();
 
 	@Override
 	public void onUpdateReceived(Update update) {
@@ -39,6 +39,7 @@ public class Bot extends TelegramLongPollingBot {
 			
 			messageOut = commandHandler.execute(new MessageCommandIn(messageText, userId, chatId, userName, messageId));
 		}
+		assert messageOut != null;
 		sendMsg(messageOut);
 	}
 
@@ -52,14 +53,15 @@ public class Bot extends TelegramLongPollingBot {
 		return System.getenv("botToken");
 	}
 
-	public void sendMsg(List<MessageCommandOut> listMessages) {
+	private void sendMsg(List<MessageCommandOut> listMessages) {
 		try {
 			for (MessageCommandOut message : listMessages) {
 				if (message.getMessageDelete() != null) {
 					execute(message.getMessageDelete());
 				}
+				log.error(message.getMessage());
 				execute(message.getMessage());
-			}
+			}	
 		} catch (TelegramApiException e) {
 			log.catching(e);
 		}

@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import dao.MeetingDAO;
 
-public class Run {
+class Run {
 	public static void main(String[] args) {
 		Logger log = LogManager.getLogger(MeetingDAO.class);
 		ApiContextInitializer.init();

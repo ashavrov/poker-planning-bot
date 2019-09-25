@@ -21,7 +21,6 @@ local.properties
 .classpath
 .recommenders
 .loadpath
-.metadata
 # External tool builders
 .externalToolBuilders/
 
@@ -29,6 +28,10 @@ local.properties
 *.launch
 .settings/
 
+.idea/*
+
 *.prefs
 
 log4j.properties
+
+*.iml

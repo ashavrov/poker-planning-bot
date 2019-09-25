@@ -1,9 +1,9 @@
 package entities;
 
 public class User {
-	private String name = "";
-	private String chatId = "";
-	private String userId = "";
+	private String name;
+	private String chatId;
+	private final String userId;
 
 	public User(String userId, String chatId, String name) {
 		this.userId = userId == null ? "" : userId;
