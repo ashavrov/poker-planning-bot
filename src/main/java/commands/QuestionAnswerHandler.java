@@ -25,10 +25,7 @@ public class QuestionAnswerHandler {
 	public List<MessageCommandOut> getNewQuestion(MessageCommandIn message) {
 		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
 		MessageCommandOut messageOut = new MessageCommandOut(message, message.getDeleteMessageId());
-		if (!isQuestionExists()) {
-			messageOut.setText("Необходимо подтверждение:");
-			messageOut.addButton("Подтвердить", getFullCommand());
-		} else {
+		if (isQuestionExists()) {
 			messageOut.setText(arrayQuestion.get(0));
 		}
 		listMessagesOut.add(messageOut);

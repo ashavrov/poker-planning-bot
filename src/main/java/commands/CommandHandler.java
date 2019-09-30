@@ -29,9 +29,11 @@ public class CommandHandler {
 				questionAnswerHandler.addAnswer(message.getMessage());
 				messagesOut = questionAnswerHandler.getNewQuestion(message);
 				if (!questionAnswerHandler.isQuestionExists()) {
+					message.setMessage(questionAnswerHandler.getFullCommand());
 					questionAnswerHandlers.remove(userId);
+				} else {
+					return messagesOut;
 				}
-				return messagesOut;
 			}
 		}
 		switch (message.getCommand()) {
