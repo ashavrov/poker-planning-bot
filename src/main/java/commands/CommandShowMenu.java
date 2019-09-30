@@ -11,7 +11,7 @@ public class CommandShowMenu implements Command {
 		MessageCommandOut messageOut = new MessageCommandOut(message, message.getDeleteMessageId());
 		HashMap<String, String> buttonHashMap = new HashMap<>();
 		messageOut.setText("Меню:");
-		buttonHashMap.put("Создать встречу", "/constructorCommand /createMeeting");
+		buttonHashMap.put("Создать встречу", "/c /createMeeting");
 		buttonHashMap.put("Все встречи", "/getMeetings");
 		messageOut.addButtons(buttonHashMap);
 		listMessagesOut.add(messageOut);

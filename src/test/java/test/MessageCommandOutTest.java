@@ -32,7 +32,7 @@ public class MessageCommandOutTest {
 		Assert.assertEquals("Test Text 2", messageOut3.getMessage().getText());
 		Assert.assertEquals("1234", messageOut3.getMessageDelete().getChatId());
 
-		MessageCommandIn messageIn4 = new MessageCommandIn("/constructorCommand /command", 1234, (long) 1234, "Test", null);
+		MessageCommandIn messageIn4 = new MessageCommandIn("/c /command", 1234, (long) 1234, "Test", null);
 		MessageCommandOut messageOut4 = new MessageCommandOut(messageIn4, 789);
 		messageOut4.setText("Test Text 3");
 		messageOut4.addQuestion("Why?");

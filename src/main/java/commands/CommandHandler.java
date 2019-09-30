@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Handler message class
+ * Class-handler for manage all commands
  *
  * @author ashavrov
  */
@@ -19,6 +19,8 @@ public class CommandHandler {
 	private final CommandAddUser commandAddUser = new CommandAddUser();
 	private final CommandGetMeetings commandGetMeetings = new CommandGetMeetings();
 	private final CommandGetMeetingCommands commandGetMeetingCommands = new CommandGetMeetingCommands();
+	private final CommandCreateGame commandCreateGame = new CommandCreateGame();
+	private final CommandShowGames commandShowGames = new CommandShowGames();
 
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		List<MessageCommandOut> messagesOut = new ArrayList<>();
@@ -27,17 +29,18 @@ public class CommandHandler {
 			QuestionAnswerHandler questionAnswerHandler = questionAnswerHandlers.get(userId);
 			if (questionAnswerHandler.isQuestionExists()) {
 				questionAnswerHandler.addAnswer(message.getMessage());
-				messagesOut = questionAnswerHandler.getNewQuestion(message);
 				if (!questionAnswerHandler.isQuestionExists()) {
 					message.setMessage(questionAnswerHandler.getFullCommand());
 					questionAnswerHandlers.remove(userId);
 				} else {
+					messagesOut = questionAnswerHandler.getNewQuestion(message);
 					return messagesOut;
 				}
 			}
 		}
 		switch (message.getCommand()) {
 			case "/constructorCommand":
+			case "/c":
 				messagesOut = constructorCommand.execute(message);
 				break;
 			case "/start":
@@ -57,6 +60,12 @@ public class CommandHandler {
 				break;
 			case "/getMeetingCommands":
 				messagesOut = commandGetMeetingCommands.execute(message);
+				break;
+			case "/createGame":
+				messagesOut = commandCreateGame.execute(message);
+				break;
+			case "/showGames":
+				messagesOut = commandShowGames.execute(message);
 				break;
 			default:
 				messagesOut

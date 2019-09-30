@@ -3,7 +3,11 @@ package commands;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Class-handler for manage questions and their answers
+ *
+ * @author ashavrov
+ */
 public class QuestionAnswerHandler {
 	private final ArrayList<String> arrayQuestion = new ArrayList<>();
 	private final ArrayList<String> arrayAnswer = new ArrayList<>();

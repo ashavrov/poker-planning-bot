@@ -1,9 +1,6 @@
 package commands;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import entities.User;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -12,7 +9,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-import entities.User;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MessageCommandOut {
 	private final SendMessage message = new SendMessage();
@@ -23,8 +22,8 @@ public class MessageCommandOut {
 	public MessageCommandOut(MessageCommandIn messageIn, Integer deleteMessageId) {
 		setChatId(messageIn.getChatId().toString());
 		setButtons();
-		if ("/constructorCommand".equals(messageIn.getCommand())) {
-			questionAnswerHandler = new QuestionAnswerHandler(messageIn.getMessage().split(" ")[1]);
+		if ("/c".equals(messageIn.getCommand())) {
+			questionAnswerHandler = new QuestionAnswerHandler(messageIn.getMessage().replace("/c ", ""));
 		}
 		this.userId = messageIn.getUserId().toString();
 		if (deleteMessageId != null) {
