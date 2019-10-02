@@ -3,7 +3,7 @@ package commands;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConstructorCommand implements Command {
+class ConstructorCommand implements Command {
 
 	@Override
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
@@ -14,6 +14,12 @@ public class ConstructorCommand implements Command {
 			questions.add("Введите название:");
 			questions.add("Введите дату:");
 			questions.add("Введите время:");
+		}else if(message.getMessage().split(" ")[1].equals("/createGame")){
+			questions.add("Введите название:");
+		} else {
+			listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId())
+					.setText("Конструктор не поддерживает команду."));
+			return listMessagesOut;
 		}
 		messageOut.setText(questions.get(0));
 		for (String question : questions) {

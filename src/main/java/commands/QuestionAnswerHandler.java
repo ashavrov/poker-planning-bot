@@ -3,7 +3,11 @@ package commands;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Class-handler for manage questions and their answers
+ *
+ * @author ashavrov
+ */
 public class QuestionAnswerHandler {
 	private final ArrayList<String> arrayQuestion = new ArrayList<>();
 	private final ArrayList<String> arrayAnswer = new ArrayList<>();
@@ -25,10 +29,7 @@ public class QuestionAnswerHandler {
 	public List<MessageCommandOut> getNewQuestion(MessageCommandIn message) {
 		ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
 		MessageCommandOut messageOut = new MessageCommandOut(message, message.getDeleteMessageId());
-		if (!isQuestionExists()) {
-			messageOut.setText("Необходимо подтверждение:");
-			messageOut.addButton("Подтвердить", getFullCommand());
-		} else {
+		if (isQuestionExists()) {
 			messageOut.setText(arrayQuestion.get(0));
 		}
 		listMessagesOut.add(messageOut);
