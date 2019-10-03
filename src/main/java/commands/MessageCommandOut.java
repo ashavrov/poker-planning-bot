@@ -32,10 +32,14 @@ public class MessageCommandOut {
 		}
 	}
 
-	public MessageCommandOut(User user) {
+	public MessageCommandOut(User user, Integer deleteMessageId) {
 		this.userId = user.getChatId();
 		setChatId(user.getChatId());
 		setButtons();
+		if (deleteMessageId != null) {
+			messageDelete = new DeleteMessage();
+			messageDelete.setChatId(user.getChatId()).setMessageId(deleteMessageId);
+		}
 	}
 
 	private void setChatId(String chatId) {

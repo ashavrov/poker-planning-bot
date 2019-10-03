@@ -4,6 +4,7 @@ import dao.GameDAO;
 import entities.Game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,14 +25,13 @@ public class CommandShowGames implements Command {
         if (matcherCommand.find()) {
             String meetingId = matcherCommand.group(3).replace("\"", "");
             GameDAO gameDAO = new GameDAO();
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("Игры:").append(System.getProperty("line.separator"));
+            HashMap<String, String> buttonHashMap = new HashMap<>();
+            MessageCommandOut messageOut = new MessageCommandOut(message, message.getDeleteMessageId()).setText("Запустить игру:");
             for (Game game : gameDAO.getByMeetingId(meetingId)) {
-                stringBuilder.append(game.getName()).append(System.getProperty("line.separator"));
+                buttonHashMap.put(game.getName(), "/startPlay \"" + game.getGameId() + "\"");
             }
-            listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId()).setText(stringBuilder.toString()));
-            listMessagesOut.add(new MessageCommandOut(message, null).setText("Запустить:")
-                    .addButton("Запустить все игры", "/playGames \"" + meetingId + "\""));
+            messageOut.addButtons(buttonHashMap);
+            listMessagesOut.add(messageOut);
         } else {
             listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId())
                     .setText("Неверный формат команды."));

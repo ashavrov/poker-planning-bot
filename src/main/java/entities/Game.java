@@ -1,13 +1,15 @@
 package entities;
 
-import java.util.Objects;
-import java.util.UUID;
+import dao.MeetingDAO;
+
+import java.util.*;
 
 public class Game {
     private final String gameId;
     private String name;
     private String meetingId;
     private boolean isEnds;
+    private final HashMap<User, String> usersBets = new HashMap<>();
 
     public Game(String name, String meetingId) {
         this.gameId= UUID.randomUUID().toString();
@@ -51,6 +53,14 @@ public class Game {
         return isEnds;
     }
 
+    public List<User> getUsers() {
+        List<User> users = new ArrayList<>();
+        for (HashMap.Entry<User, String> bets : usersBets.entrySet()) {
+            users.add(bets.getKey());
+        }
+        return users;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,5 +74,22 @@ public class Game {
     @Override
     public int hashCode() {
         return Objects.hash(name, meetingId, isEnds);
+    }
+
+    public void start() {
+        MeetingDAO meetingDAO = new MeetingDAO();
+        for (User user : meetingDAO.getAllUsers(meetingDAO.getById(meetingId))) {
+            usersBets.put(user, null);
+        }
+    }
+
+    public boolean play(User user, String bet) {
+        usersBets.put(user, bet);
+        for (HashMap.Entry<User, String> bets : usersBets.entrySet()) {
+            if(bets.getValue() == null){
+                return false;
+            }
+        }
+        return isEnds;
     }
 }

@@ -19,7 +19,7 @@ public class MessageCommandOutTest {
 		Assert.assertNull(messageOut1.getMessageDelete());
 
 		User user1 = new User("123123", "23423423", "TestUser");
-		MessageCommandOut messageOut2 = new MessageCommandOut(user1);
+		MessageCommandOut messageOut2 = new MessageCommandOut(user1, null);
 		messageOut2.setText("Test Text 1");
 		Assert.assertEquals("23423423", messageOut2.getMessage().getChatId());
 		Assert.assertEquals("Test Text 1", messageOut2.getMessage().getText());

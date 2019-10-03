@@ -29,7 +29,7 @@ public class CommandAddUser implements Command {
 					User userAdd = userDAO.getById(userId);
 					Meeting meetingToAdd = meetingDAO.getById(meetingId);
 					meetingDAO.addUser(userAdd, meetingToAdd);
-					listMessagesOut.add(new MessageCommandOut(userAdd)
+					listMessagesOut.add(new MessageCommandOut(userAdd, null)
 							.setText("Вы добавленны во встречу \"" + meetingToAdd.getName() + "\""));
 					listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId())
 							.setText("Пользователь добавлен."));
