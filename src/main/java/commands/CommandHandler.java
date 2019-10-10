@@ -22,6 +22,7 @@ public class CommandHandler {
 	private final CommandCreateGame commandCreateGame = new CommandCreateGame();
 	private final CommandShowGames commandShowGames = new CommandShowGames();
 	private final CommandStartPlay commandStartPlay = new CommandStartPlay();
+	private final CommandPlayGame commandPlayGame = new CommandPlayGame();
 
 	public List<MessageCommandOut> execute(MessageCommandIn message) {
 		List<MessageCommandOut> messagesOut = new ArrayList<>();
@@ -70,6 +71,9 @@ public class CommandHandler {
 				break;
 			case "/startPlay":
 				messagesOut = commandStartPlay.execute(message);
+				break;
+			case "/playGame":
+				messagesOut = commandPlayGame.execute(message);
 				break;
 			default:
 				messagesOut

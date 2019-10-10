@@ -5,33 +5,40 @@ import entities.Game;
 import entities.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandStartPlay implements Command {
+public class CommandPlayGame implements Command {
     private final ArrayList<Game> games = new ArrayList<>();
 
     @Override
     public List<MessageCommandOut> execute(MessageCommandIn message) {
         ArrayList<MessageCommandOut> listMessagesOut = new ArrayList<>();
 
-        Pattern patternCommand = Pattern.compile("^(/.*?)(\\s)(\".*\")$");
+        Pattern patternCommand = Pattern.compile("^(/.*?)(\\s)(\".*\")(\\s)(\".*\")$");
         Matcher matcherCommand = patternCommand.matcher(message.getMessage());
 
         if (matcherCommand.find()) {
             String gameId = matcherCommand.group(3).replace("\"", "");
+            String bet = matcherCommand.group(5).replace("\"", "");
             Game game = getRunningGames(gameId);
             if (game == null) {
                 GameDAO gameDAO = new GameDAO();
                 game = gameDAO.getById(gameId);
-                game.start();
+                games.add(game);
+            }
 
-                for (User user : game.getUsers()) {
-                    listMessagesOut.add(new MessageCommandOut(user,
-                            user.getUserId().equals(message.getUserId().toString()) ? message.getDeleteMessageId() : null)
-                            .setText("Запущена игра \"" + game.getName() + "\"")
-                            .addButton("Играть", "/c /playGame \"" + game.getGameId() + "\""));
+            for (User user : game.getUsers()) {
+                if (user.getUserId().equals(message.getUserId())) {
+                    if(game.play(user, bet)){
+                        for (HashMap.Entry<User, String> bets : game.getUsersBets().entrySet()) {
+                            listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId())
+                                    .setText(bets.getKey().getName()+" "+bets.getValue()));
+                        }
+                        break;
+                    }
                 }
             }
         } else {

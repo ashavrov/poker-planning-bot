@@ -92,4 +92,8 @@ public class Game {
         }
         return isEnds;
     }
+
+    public HashMap<User, String> getUsersBets() {
+        return usersBets;
+    }
 }

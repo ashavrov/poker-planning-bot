@@ -16,6 +16,8 @@ class ConstructorCommand implements Command {
 			questions.add("Введите время:");
 		}else if(message.getMessage().split(" ")[1].equals("/createGame")){
 			questions.add("Введите название:");
+		} else if (message.getMessage().split(" ")[1].equals("/playGame")) {
+			questions.add("Введите оценку:");
 		} else {
 			listMessagesOut.add(new MessageCommandOut(message, message.getDeleteMessageId())
 					.setText("Конструктор не поддерживает команду."));
